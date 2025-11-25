@@ -9,7 +9,6 @@ import com.project.happy.dto.scheduling.AppointmentRequest;
 import com.project.happy.dto.scheduling.ApproveRequest;
 import com.project.happy.dto.scheduling.CancelRequest;
 import com.project.happy.entity.Meeting;
-import com.project.happy.repository.ISchedulingRepository;
 import com.project.happy.repository.IStudentSchedulingRepository;
 import com.project.happy.repository.ITutorSchedulingRepository;
 
@@ -18,15 +17,12 @@ public class SchedulingService {
 
     private final IStudentSchedulingRepository studentRepo;
     private final ITutorSchedulingRepository tutorRepo;
-    private final ISchedulingRepository userRepo;
 
     public SchedulingService(
             IStudentSchedulingRepository studentRepo,
-            ITutorSchedulingRepository tutorRepo,
-            ISchedulingRepository schedulingRepo) {
+            ITutorSchedulingRepository tutorRepo) {
         this.studentRepo = studentRepo;
         this.tutorRepo = tutorRepo;
-        this.userRepo = schedulingRepo;
     }
 
     public boolean book(AppointmentRequest request) {
@@ -54,11 +50,24 @@ public class SchedulingService {
     }
 
     public boolean cancel(Long meetingId, CancelRequest req) {
-        return userRepo.cancelMeeting(
-                meetingId,
-                req.getUserId(),
-                req.getReason());
-    }
+
+
+    boolean studentResult = studentRepo.cancelMeeting(
+            meetingId,
+            req.getUserId(),
+            req.getReason()
+    );
+
+    if (studentResult) return true;
+
+    
+    return tutorRepo.cancelMeeting(
+            meetingId,
+            req.getUserId(),
+            req.getReason()
+    );
+}
+
 
     public List<Meeting> getMeetings(Long userId) {
 
