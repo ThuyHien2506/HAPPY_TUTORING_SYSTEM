@@ -1,11 +1,14 @@
 package com.project.happy.repository;
 
-import com.project.happy.entity.Appointment;
-import com.project.happy.entity.Meeting;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+import com.project.happy.entity.Appointment;
+import com.project.happy.entity.Meeting;
+
+@Repository
 public class TutorSchedulingRepository implements ITutorSchedulingRepository {
 
     private List<Meeting> meetings = new ArrayList<>();
