@@ -8,43 +8,50 @@ import org.springframework.stereotype.Repository;
 
 import com.project.happy.entity.Appointment;
 import com.project.happy.entity.Meeting;
+import com.project.happy.repository.storage.MeetingStore;
 
 @Repository
 public class StudentSchedulingRepository implements IStudentSchedulingRepository {
 
-    private List<Meeting> meetings = new ArrayList<>();
+    private final MeetingStore store;
+
+    public StudentSchedulingRepository(MeetingStore store) {
+        this.store = store;
+    }
 
     @Override
     public boolean bookAppointment(Long studentId, Long tutorId,
-                                   LocalDateTime date, LocalDateTime startTime, String topic) {
+            LocalDateTime date, LocalDateTime startTime, String topic) {
         LocalDateTime endTime = startTime.plusHours(1);
         Appointment newAppointment = new Appointment(System.currentTimeMillis(), tutorId, studentId,
                 date, startTime, endTime, topic);
 
-        for (Meeting m : meetings) {
+        for (Meeting m : store.getAll()) {
             if (m.getTutorId().equals(tutorId) && m.overlapsWith(newAppointment)) {
                 return false; // conflict
             }
         }
 
-        meetings.add(newAppointment);
+        store.add(newAppointment);
         return true;
     }
 
     public List<Meeting> viewMeetings(Long userId) {
         List<Meeting> result = new ArrayList<>();
-        for (Meeting m : meetings) {
+        for (Meeting m : store.getAll()) {
             if (m instanceof Appointment) {
                 Appointment a = (Appointment) m;
-                if (a.getStudentId().equals(userId)) result.add(a);
+                if (a.getStudentId().equals(userId))
+                    result.add(a);
             }
         }
         return result;
     }
 
     public boolean cancelMeeting(Long meetingId, Long userId, String reason) {
-        for (Meeting m : meetings) {
-            if (m.getMeetingId().equals(meetingId)) return m.cancel(userId, reason);
+        for (Meeting m : store.getAll()) {
+            if (m.getMeetingId().equals(meetingId))
+                return m.cancel(userId, reason);
         }
         return false;
     }
