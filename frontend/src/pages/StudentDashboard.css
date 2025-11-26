@@ -1,0 +1,347 @@
+/* ====== LAYOUT CHUNG CHO DASHBOARD ====== */
+
+.dashboard-root {
+  position: relative;      /* để con absolute bám theo */
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+/* ---- Sidebar ---- */
+
+.sidebar {
+  position: relative;
+  width: 320px;
+  background-color: #003366;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding-top: 120px;   /* chừa chỗ trên cho logo + chữ */
+}
+
+/* logo + chữ nằm trên vùng thanh ngang */
+.sidebar-header {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 3;
+}
+
+.sidebar-logo-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sidebar-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* chữ tên trường – ép màu trắng lại */
+.sidebar-school-text {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #ffffff !important;  /* thêm !important nếu trước đó bị rule khác đè */
+}
+/* chữ trong các banner menu */
+.sidebar-nav .nav-item,
+.sidebar-nav .nav-item:focus,
+.sidebar-nav .nav-item:hover,
+.sidebar-nav .nav-item.active {
+  color: #ffffff !important;
+  background-color: transparent; /* hoặc #024c8c cho .active nếu bạn muốn */
+}
+
+
+/* Menu dọc: xếp thành 1 cột */
+.sidebar-nav {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mỗi banner là một hàng full width, khít nhau, chỉ cách bởi 1 gạch trắng */
+.nav-item {
+  display: block;                                      
+  width: 100%;                                         
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.9);   
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;                                    
+  cursor: pointer;
+}
+
+/* ô đầu tiên có thêm đường kẻ trên cho đều */
+.nav-item:first-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+/* ô đang active (Trang chủ, Khóa học…) */
+.nav-item.active {
+  background-color: #024c8c;
+}
+
+
+/* ---- Main area ---- */
+
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: 96px;         /* cùng số với height của .topbar */
+}
+
+
+/* ---- Topbar ---- */
+
+/* Thanh ngang trên cùng */
+.topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 96px;              /* tăng từ 72px lên 96px (hoặc 100 tùy bạn) */
+  background-color: #003366;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 32px;
+  color: #ffffff;
+  z-index: 2;
+}
+
+
+.topbar-left {
+  font-weight: 600;
+}
+
+/* --- topbar: user menu --- */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.user-menu-trigger {
+  cursor: pointer;
+}
+
+.user-name-text {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.user-menu-arrow {
+  font-size: 12px;
+  color: #ffffff;
+}
+
+.avatar-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #004b8d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+/* dropdown menu */
+.user-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background-color: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  min-width: 160px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.user-dropdown-menu button {
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.user-dropdown-menu button:hover {
+  background-color: #f0f0f0;
+}
+
+/* ---- Content ---- */
+
+.content-row {
+  flex: 1;
+  display: flex;
+  padding: 32px 40px;
+  gap: 40px;
+  background-color: #f5f5f5;
+  align-items: flex-start;
+}
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 380px; /* gần giống Figma, bạn có thể chỉnh 360–420 */
+}
+/* Card chung */
+
+.card {
+  background-color: #ffffff;
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+/* Upcoming card + Welcome */
+
+.upcoming-card {
+  width: 100%;
+}
+
+.welcome-title {
+  margin: 0 0 20px;
+  font-weight: 700;
+  font-size: 28px;
+  color: #003366;
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.upcoming-inner-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px 18px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.upcoming-inner-card h3 {
+  margin: 0 0 12px;
+  color: #003366;
+}
+
+.upcoming-main-line {
+  font-weight: 700;
+}
+
+.small-text {
+  font-size: 12px;
+  color: #666;
+  margin-top: 10px;
+}
+
+.server-text {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #888;
+}
+
+/* Calendar card */
+
+.calendar-card {
+  width: 100%;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.calendar-button {
+  background-color: #ffcc00;
+  border: none;
+  padding: 6px 18px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.calendar-code-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 2px solid #00b35a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #00b35a;
+}
+
+.calendar-placeholder {
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+/* Calendar table */
+
+.calendar-month-label {
+  text-align: right;
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 4px;
+}
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: center;
+}
+
+.calendar-table th {
+  font-weight: 600;
+  color: #777;
+  padding-bottom: 4px;
+}
+
+.calendar-table td {
+  padding: 4px 0;
+}
+
+.calendar-today {
+  border-radius: 999px;
+  border: 2px solid #ffcc00;
+}
+
+/* Hình minh hoạ bên phải */
+
+.illustration-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.illustration-img {
+  max-width: 520px;  /* tăng lên để to hơn */
+  height: auto;
+  display: block;
+}
+
