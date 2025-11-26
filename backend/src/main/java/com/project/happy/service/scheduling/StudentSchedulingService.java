@@ -1,27 +1,23 @@
 package com.project.happy.service.scheduling;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.project.happy.dto.freeslot.FreeSlotResponse;
 import com.project.happy.entity.Appointment;
 import com.project.happy.entity.Meeting;
 import com.project.happy.entity.TutorSlot;
-import com.project.happy.service.scheduling.IStudentSchedulingService;
-import com.project.happy.repository.MeetingRepository;
 import com.project.happy.repository.FreeSlotRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.Comparator;
-import java.util.Map;
-
-
-import com.project.happy.service.freeslot.FreeSlotService;
+import com.project.happy.repository.MeetingRepository;
 
 @Service
 public class StudentSchedulingService implements IStudentSchedulingService {
@@ -31,6 +27,8 @@ public class StudentSchedulingService implements IStudentSchedulingService {
     private final FreeSlotRepository slotRepo;
 
     public StudentSchedulingService(MeetingRepository meetingRepo, FreeSlotRepository slotRepo) {
+        System.out.println(">>> USING SLOT REPO BEAN = " + slotRepo.getClass());
+        System.out.println(">>> StudentSchedulingService GOT SLOT REPO = " + slotRepo.hashCode());
         this.meetingRepo = meetingRepo;
         this.slotRepo = slotRepo;
     }
@@ -87,64 +85,62 @@ public class StudentSchedulingService implements IStudentSchedulingService {
     @Override
     public List<FreeSlotResponse> viewTutorAvailableSlots(Long tutorId) {
 
+        System.out.println(">>> CALLED viewTutorAvailableSlots WITH tutorId = " + tutorId);
+
         LocalDate today = LocalDate.now();
         int currentMonth = today.getMonthValue();
         int currentYear = today.getYear();
 
         // Lấy slot tháng này
         List<TutorSlot> thisMonth = slotRepo.findByTutorIdAndDateBetween(
-                (long) tutorId, currentMonth, currentYear);
+                tutorId, currentMonth, currentYear);
 
         // Lấy slot tháng sau
         int nextMonth = (currentMonth == 12) ? 1 : currentMonth + 1;
         int nextYear = (currentMonth == 12) ? currentYear + 1 : currentYear;
 
         List<TutorSlot> nextMonthSlots = slotRepo.findByTutorIdAndDateBetween(
-                (long) tutorId, nextMonth, nextYear);
+                tutorId, nextMonth, nextYear);
 
-        // Gộp 2 tháng
+        // Gộp dữ liệu
         List<TutorSlot> all = Stream.concat(thisMonth.stream(), nextMonthSlots.stream())
-                .filter(slot -> !slot.getDate().isBefore(today))
                 .sorted(Comparator.comparing(TutorSlot::getDate)
                         .thenComparing(TutorSlot::getStartTime))
                 .collect(Collectors.toList());
 
-        
+        System.out.println(">>> TOTAL SLOTS FOUND = " + all.size());
+
         if (all.isEmpty())
             return List.of();
 
-        
-        Map<LocalDate, List<TutorSlot>> grouped = all.stream()
-                .collect(Collectors.groupingBy(TutorSlot::getDate));
+        // Group theo ngày
+        Map<LocalDate, List<TutorSlot>> grouped = all.stream().collect(Collectors.groupingBy(TutorSlot::getDate));
 
-        List<FreeSlotResponse> responseList = new ArrayList<>();
+        List<FreeSlotResponse> result = new ArrayList<>();
 
-        
         for (var entry : grouped.entrySet()) {
-
             LocalDate date = entry.getKey();
-            List<TutorSlot> slots = entry.getValue();
+            List<TutorSlot> daySlots = entry.getValue();
 
             FreeSlotResponse resp = new FreeSlotResponse();
-            resp.setTutorId((long) tutorId);
+            resp.setTutorId(tutorId);
             resp.setDate(date);
             resp.setStatus("AVAILABLE");
 
-            
-            List<FreeSlotResponse.TimeRange> ranges = slots.stream()
+            List<FreeSlotResponse.TimeRange> ranges = daySlots.stream()
                     .map(s -> new FreeSlotResponse.TimeRange(
                             s.getStartTime(),
                             s.getEndTime()))
                     .collect(Collectors.toList());
 
             resp.setTimeRanges(ranges);
-            responseList.add(resp);
+
+            result.add(resp);
         }
 
-        
-        responseList.sort(Comparator.comparing(FreeSlotResponse::getDate));
+        result.sort(Comparator.comparing(FreeSlotResponse::getDate));
 
-        return responseList;
+        return result;
     }
 
     @Override
