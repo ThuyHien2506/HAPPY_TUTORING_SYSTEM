@@ -2,13 +2,24 @@ import React, { useState } from 'react';
 import './App.css';
 
 function TutorCard({ tutor, onSelect }) {
+  const avatarImages = [
+    'https://i.pravatar.cc/150?img=1',
+    'https://i.pravatar.cc/150?img=2',
+    'https://i.pravatar.cc/150?img=3',
+    'https://i.pravatar.cc/150?img=4',
+    'https://i.pravatar.cc/150?img=5'
+  ];
+  const avatarUrl = avatarImages[tutor.tutorId.charCodeAt(tutor.tutorId.length - 1) % avatarImages.length];
+
   return (
     <div className="tutor-card">
-      <div className="tutor-avatar">{tutor.name.split(' ').map(n=>n[0]).slice(0,2).join('')}</div>
+      <img src={avatarUrl} alt={tutor.name} className="tutor-avatar-img" />
       <div className="tutor-info">
         <div className="tutor-name">{tutor.name}</div>
-        <div className="tutor-subject">{tutor.subject}</div>
-        <div className="tutor-meta">Rating: {tutor.rating} • Slots: {tutor.availableSlots}</div>
+        <div className="tutor-rating">★★★★★ {tutor.rating}</div>
+        <div className="tutor-meta">
+          <span>{tutor.availableSlots} slot còn trống</span>
+        </div>
       </div>
       <div>
         <button className="btn btn-select" onClick={() => onSelect(tutor)}>Chọn</button>
@@ -68,9 +79,9 @@ export default function RegisterTutor() {
   return (
     <div className="register-root">
       <div className="wizard">
-        <div className={`step ${step===1? 'active':''}`}>1<br/><small>Nhập thông tin</small></div>
-        <div className={`step ${step===2? 'active':''}`}>2<br/><small>Chọn tutor</small></div>
-        <div className={`step ${step===3? 'active':''}`}>3<br/><small>Xác nhận</small></div>
+        <div className={`step ${step>=1? 'active':''}`}><div>1</div><small>Nhập thông tin</small></div>
+        <div className={`step ${step>=2? 'active':''}`}><div>2</div><small>Chọn tutor</small></div>
+        <div className={`step ${step>=3? 'active':''}`}><div>3</div><small>Xác nhận</small></div>
       </div>
 
       {step===1 && (
@@ -111,22 +122,25 @@ export default function RegisterTutor() {
 
       {step===3 && (
         <div className="card">
-          <h3>Xác nhận đăng ký</h3>
-          <div className="confirm-box">
-            <p><strong>Học viên:</strong> s123</p>
-            <p><strong>Môn:</strong> {subject}</p>
-            <p><strong>Tutor:</strong> {selectedTutor?.name || (tutors[0] && tutors[0].name)}</p>
-            <p className="note">Yêu cầu sẽ ở trạng thái Chờ duyệt trong 12 giờ.</p>
+          <div className="confirm-box-wrapper">
+            <div className="confirm-box">
+              <p><strong>Học viên:</strong> s123</p>
+              <p><strong>Môn:</strong> {subject}</p>
+              <p><strong>Tutor:</strong> {selectedTutor?.name || (tutors[0] && tutors[0].name)}</p>
+              <p className="note">Yêu cầu sẽ ở trạng thái Chờ duyệt trong 12 giờ.</p>
+              <button className="btn btn-danger" onClick={()=>{ setStep(1); setSubject(''); setTutors([]); setSelectedTutor(null); }}>Quay lại</button>
+            </div>
           </div>
-          <div className="actions">
+          <div className="actions" style={{justifyContent: 'center', marginTop: '24px'}}>
             <button className="btn" onClick={()=>setStep(2)}>Quay lại</button>
-            <button className="btn btn-primary" onClick={onConfirm}>Tiếp theo</button>
+            <button className="btn btn-primary" onClick={onConfirm}>Xác nhận</button>
           </div>
         </div>
       )}
 
       {step===4 && (
         <div className="card success">
+          <div className="success-icon">✓</div>
           <h3>Đăng ký thành công</h3>
           <p>Yêu cầu của bạn đã được lưu và đang chờ duyệt.</p>
           <div className="actions">
