@@ -2,6 +2,7 @@ package com.project.happy.controller.scheduling;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,12 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.happy.dto.scheduling.AppointmentRequest;
+
 import com.project.happy.entity.Appointment;
 import com.project.happy.dto.scheduling.ApproveRequest;
 import com.project.happy.dto.scheduling.CancelRequest;
+import com.project.happy.dto.scheduling.RejectRequest;
 import com.project.happy.entity.Meeting;
 import com.project.happy.service.scheduling.ITutorSchedulingService;
-
 
 @RestController
 @RequestMapping("/api/tutor/scheduling")
@@ -28,33 +30,64 @@ public class TutorSchedulingAPI {
         this.tutorService = tutorService;
     }
 
+    // =================== Appointments ===================
     @GetMapping("/appointments/pending")
-    public List<Appointment> pending(@RequestParam Long tutorId) {
-        return tutorService.viewPendingAppointments(tutorId);
+    public ResponseEntity<List<Appointment>> pending(@RequestParam Long tutorId) {
+        List<Appointment> list = tutorService.viewPendingAppointments(tutorId);
+        return ResponseEntity.ok(list);
     }
 
     @PostMapping("/appointments/{id}/approve")
-    public String approve(@PathVariable Long id, @RequestBody ApproveRequest req) {
-        return tutorService.approveAppointment(id, req.getTutorId());
+    public ResponseEntity<String> approve(@PathVariable Long id, @RequestBody ApproveRequest req) {
+        boolean result = tutorService.approveAppointment(id, req.getTutorId());
+        if (result) {
+            return ResponseEntity.ok("Appointment approved successfully");
+        } else {
+            return ResponseEntity.badRequest()
+                    .body("Cannot approve appointment (maybe already approved or rejected)");
+        }
     }
 
     @PostMapping("/appointments/{id}/reject")
-    public boolean reject(@PathVariable Long id, @RequestBody ApproveRequest req) {
-        return tutorService.rejectAppointment(id, req.getTutorId());
+    public ResponseEntity<String> reject(@PathVariable Long id, @RequestBody RejectRequest req) {
+        // Validation lý do reject
+        if (req.getReason() == null || req.getReason().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Reason for rejection must not be empty");
+        }
+
+        boolean result = tutorService.rejectAppointment(id, req.getTutorId(), req.getReason());
+        if (result) {
+            return ResponseEntity.ok("Appointment rejected successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Cannot reject appointment (maybe already approved or rejected)");
+        }
     }
 
-    @GetMapping("/appointments/approved")
-    public List<Appointment> approved(@RequestParam Long tutorId) {
-        return tutorService.viewApprovedAppointments(tutorId);
+    // =================== Meetings ===================
+
+    @GetMapping("/meetings/official")
+    public ResponseEntity<List<Appointment>> official(@RequestParam Long tutorId) {
+        List<Appointment> list = tutorService.viewOfficialAppointments(tutorId); // có thể là Appointment + các loại Meeting                                                                  // khác
+        return ResponseEntity.ok(list);
     }
 
     @PostMapping("/meetings/{id}/cancel")
-    public boolean cancel(@PathVariable Long id, @RequestBody CancelRequest req) {
-        return tutorService.cancelMeeting(req.getUserId(), id, req.getReason());
+    public ResponseEntity<String> cancel(@PathVariable Long id, @RequestBody CancelRequest req) {
+        boolean result = tutorService.cancelMeeting(req.getUserId(), id, req.getReason());
+        if (result) {
+            return ResponseEntity.ok("Meeting cancelled successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Cannot cancel meeting");
+        }
     }
 
     @GetMapping("/meeting/{id}")
-    public Meeting detail(@PathVariable Long id) {
-        return tutorService.viewMeetingDetails(id);
+    public ResponseEntity<Meeting> detail(@PathVariable Long id) {
+        Meeting meeting = tutorService.viewMeetingDetails(id);
+        if (meeting != null) {
+            return ResponseEntity.ok(meeting);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

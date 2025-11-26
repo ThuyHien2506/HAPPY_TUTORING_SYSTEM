@@ -6,6 +6,7 @@ public class Appointment extends Meeting {
 
     private Long studentId;
     private AppointmentStatus appointmentStatus;
+    private String rejectReason;
 
     public Appointment(Long meetingId,
                        Long tutorId,
@@ -26,14 +27,16 @@ public class Appointment extends Meeting {
         return true;
     }
 
-    public boolean reject() {
-        if (appointmentStatus != AppointmentStatus.PENDING) return false;
+    public boolean reject(String reason) {
+        if (appointmentStatus != AppointmentStatus.PENDING || reason == null || reason.isEmpty()) return false;
         appointmentStatus = AppointmentStatus.REJECTED;
+        this.rejectReason = reason;
         return true;
     }
 
     // Getters & Setters
     public Long getStudentId() { return studentId; }
     public AppointmentStatus getAppointmentStatus() { return appointmentStatus; }
+    public String getRejectReason() { return rejectReason; }
     public void setAppointmentStatus(AppointmentStatus status) { this.appointmentStatus = status; }
 }

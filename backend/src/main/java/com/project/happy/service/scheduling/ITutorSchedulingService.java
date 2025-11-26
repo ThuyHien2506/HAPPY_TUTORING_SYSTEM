@@ -11,17 +11,16 @@ public interface ITutorSchedulingService {
 
     List<Appointment> viewPendingAppointments(Long tutorId);
 
-    String approveAppointment(Long appointmentId, Long tutorId);
+    boolean approveAppointment(Long appointmentId, Long tutorId);
 
-    boolean rejectAppointment(Long appointmentId, Long tutorId);
-
-    List<Appointment> viewApprovedAppointments(Long tutorId);
+    boolean rejectAppointment(Long appointmentId, Long tutorId, String reason);
+    List<Appointment> viewOfficialAppointments(Long tutorId);
 
     boolean cancelMeeting(Long tutorId, Long meetingId, String reason);
 
-    List<Appointment> findPendingAppointmentsByTutor(Long tutorId);
+    List<Appointment> findPendingAppointments(Long tutorId);
 
-    List<Appointment> findApprovedAppointmentsByTutor(Long tutorId);
+    //List<Appointment> findApprovedAppointments(Long tutorId);
 
     //boolean validateScheduleConflict(Long tutorId, LocalDateTime start, LocalDateTime end);
 

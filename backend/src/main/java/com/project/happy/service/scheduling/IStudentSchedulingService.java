@@ -17,7 +17,7 @@ public interface IStudentSchedulingService {
 
     boolean bookAppointment(Long studentId, Long tutorId, LocalDateTime date, LocalDateTime startTime, LocalDateTime endTime, String topic);
 
-    List<Appointment> findApprovedAppointments(Long studentId);
+    List<Appointment> viewOfficialAppointments(Long studentId);
 
     List<Appointment> viewAppointmentHistory(Long studentId);
 
@@ -25,7 +25,7 @@ public interface IStudentSchedulingService {
 
     // ---------------- Helper / Optional ----------------
 
-    List<Appointment> findCancellableAppointmentByStudent(Long studentId);
+    List<Appointment> findCancellableAppointment(Long studentId);
 
     List<FreeSlotResponse> viewTutorAvailableSlots(Long tutorId);
 
