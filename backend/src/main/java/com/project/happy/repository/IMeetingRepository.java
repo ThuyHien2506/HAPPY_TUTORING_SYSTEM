@@ -25,4 +25,8 @@ public interface IMeetingRepository {
     // Common / Helper
     List<Appointment> findCancellableAppointmentsByTutor(Long tutorId);
     List<Appointment> findCancellableAppointmentsByStudent(Long studentId);
+<<<<<<< HEAD
+=======
+    
+>>>>>>> origin/main
 }
