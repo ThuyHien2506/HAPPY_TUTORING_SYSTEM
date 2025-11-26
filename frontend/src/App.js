@@ -1,11 +1,12 @@
 import './App.css';
 import RegisterTutor from './RegisterTutor';
+import Layout from './Layout';
 
 function App() {
   return (
-    <div className="App">
+    <Layout>
       <RegisterTutor />
-    </div>
+    </Layout>
   );
 }
 
