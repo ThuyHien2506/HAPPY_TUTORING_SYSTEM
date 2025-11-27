@@ -14,11 +14,11 @@ import java.util.List;
 
 @Component
 public class TutorRegistrationScheduler {
-
+    @Autowired
     private static final Logger logger = LoggerFactory.getLogger(TutorRegistrationScheduler.class);
     private final TutorRegistrationService registrationService;
 
-    @Autowired
+   
     public TutorRegistrationScheduler(TutorRegistrationService registrationService) {
         this.registrationService = registrationService;
     }

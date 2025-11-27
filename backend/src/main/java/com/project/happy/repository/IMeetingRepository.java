@@ -1,9 +1,9 @@
 package com.project.happy.repository;
 
+import java.util.List;
+
 import com.project.happy.entity.Appointment;
 import com.project.happy.entity.Meeting;
-
-import java.util.List;
 
 public interface IMeetingRepository {
 
@@ -18,12 +18,15 @@ public interface IMeetingRepository {
     List<Appointment> findOfficialAppointmentsByTutor(Long tutorId);
 
     // Student-specific queries
-    List<Appointment> findAllAppointmentsByStudent(Long studentId);    // all appointments, any status
+    List<Appointment> findAllAppointmentsByStudent(Long studentId);    // all appointments, any status     // all meetings, any status
     List<Appointment> findApprovedAppointmentsByStudent(Long studentId);
     List<Appointment> findOfficialAppointmentsByStudent(Long studentId);
 
+    List<Meeting> findOfficialMeetingsByStudent(Long studentId);
+    List<Meeting> findOfficialMeetingsByTutor(Long tutorId);
     // Common / Helper
     List<Appointment> findCancellableAppointmentsByTutor(Long tutorId);
     List<Appointment> findCancellableAppointmentsByStudent(Long studentId);
-    
+    List<Meeting> findCancellableMeetingsByStudent(Long studentId);
+    List<Meeting> findCancellableMeetingsByTutor(Long tutorId);
 }

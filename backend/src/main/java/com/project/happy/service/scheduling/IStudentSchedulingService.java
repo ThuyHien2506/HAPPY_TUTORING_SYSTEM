@@ -1,15 +1,11 @@
 package com.project.happy.service.scheduling;
 
-import java.time.LocalDate;
-
-import com.project.happy.entity.Appointment;
-import com.project.happy.entity.Meeting;
-import com.project.happy.entity.TutorSlot;
-import com.project.happy.dto.freeslot.FreeSlotResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.hibernate.loader.ast.spi.Loadable;
+import com.project.happy.dto.freeslot.FreeSlotResponse;
+import com.project.happy.entity.Appointment;
+import com.project.happy.entity.Meeting;
 
 public interface IStudentSchedulingService {
 
@@ -17,7 +13,9 @@ public interface IStudentSchedulingService {
 
     boolean bookAppointment(Long studentId, Long tutorId, LocalDateTime date, LocalDateTime startTime, LocalDateTime endTime, String topic);
 
-    List<Appointment> findApprovedAppointments(Long studentId);
+    List<Appointment> viewOfficialAppointments(Long studentId);
+    
+    List<Meeting> viewOfficialMeetings(Long studentId);
 
     List<Appointment> viewAppointmentHistory(Long studentId);
 
@@ -25,10 +23,12 @@ public interface IStudentSchedulingService {
 
     // ---------------- Helper / Optional ----------------
 
-    List<Appointment> findCancellableAppointmentByStudent(Long studentId);
+    List<Appointment> findCancellableAppointment(Long studentId);
 
     List<FreeSlotResponse> viewTutorAvailableSlots(Long tutorId);
 
+    List<Meeting> findCancellableMeetings(Long studentId);
+    
     //boolean checkTutorSlotAvailability(int tutorId, LocalDateTime date, LocalDateTime start, LocalDateTime end);
 
     Meeting viewMeetingDetails(Long meetingId);

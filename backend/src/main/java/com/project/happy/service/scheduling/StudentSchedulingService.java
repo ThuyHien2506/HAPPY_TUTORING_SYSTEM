@@ -17,16 +17,16 @@ import com.project.happy.entity.Appointment;
 import com.project.happy.entity.Meeting;
 import com.project.happy.entity.TutorSlot;
 import com.project.happy.repository.FreeSlotRepository;
-import com.project.happy.repository.MeetingRepository;
+import com.project.happy.repository.IMeetingRepository;
 
 @Service
 public class StudentSchedulingService implements IStudentSchedulingService {
 
     @Autowired
-    private MeetingRepository meetingRepo;
+    private IMeetingRepository meetingRepo;
     private final FreeSlotRepository slotRepo;
 
-    public StudentSchedulingService(MeetingRepository meetingRepo, FreeSlotRepository slotRepo) {
+    public StudentSchedulingService(IMeetingRepository meetingRepo, FreeSlotRepository slotRepo) {
         System.out.println(">>> USING SLOT REPO BEAN = " + slotRepo.getClass());
         System.out.println(">>> StudentSchedulingService GOT SLOT REPO = " + slotRepo.hashCode());
         this.meetingRepo = meetingRepo;
@@ -52,17 +52,13 @@ public class StudentSchedulingService implements IStudentSchedulingService {
     }
 
     @Override
-    public List<Appointment> findApprovedAppointments(Long studentId) {
-        return meetingRepo.findApprovedAppointmentsByStudent(studentId);
-    }
-
-    @Override
     public List<Appointment> viewAppointmentHistory(Long studentId) {
         return meetingRepo.findAllAppointmentsByStudent(studentId);
     }
 
     @Override
     public boolean cancelMeeting(Long meetingId, String reason) {
+
         Meeting meeting = meetingRepo.findById(meetingId);
         if (meeting == null || meeting.isCancelled()) {
             return false;
@@ -78,7 +74,7 @@ public class StudentSchedulingService implements IStudentSchedulingService {
     }
 
     @Override
-    public List<Appointment> findCancellableAppointmentByStudent(Long studentId) {
+    public List<Appointment> findCancellableAppointment(Long studentId) {
         return meetingRepo.findCancellableAppointmentsByStudent(studentId);
     }
 
@@ -147,4 +143,20 @@ public class StudentSchedulingService implements IStudentSchedulingService {
     public Meeting viewMeetingDetails(Long meetingId) {
         return meetingRepo.findById(meetingId);
     }
+
+    @Override
+    public List<Appointment> viewOfficialAppointments(Long studentId) {
+        return meetingRepo.findOfficialAppointmentsByStudent(studentId);
+    }
+
+    @Override
+    public List<Meeting> viewOfficialMeetings(Long studentId) {
+        return meetingRepo.findOfficialMeetingsByStudent(studentId);
+    }
+
+    @Override
+    public List<Meeting> findCancellableMeetings(Long studentId) {
+        return meetingRepo.findCancellableMeetingsByStudent(studentId);
+    }
+
 }
