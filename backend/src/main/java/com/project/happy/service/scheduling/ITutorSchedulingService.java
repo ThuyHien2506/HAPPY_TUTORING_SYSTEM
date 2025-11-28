@@ -1,10 +1,9 @@
 package com.project.happy.service.scheduling;
 
+import java.util.List;
+
 import com.project.happy.entity.Appointment;
 import com.project.happy.entity.Meeting;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 
 public interface ITutorSchedulingService {
@@ -15,8 +14,10 @@ public interface ITutorSchedulingService {
 
     boolean rejectAppointment(Long appointmentId, Long tutorId, String reason);
     List<Appointment> viewOfficialAppointments(Long tutorId);
+    List<Meeting> viewOfficialMeetings(Long tutorId);
 
     boolean cancelMeeting(Long tutorId, Long meetingId, String reason);
+    public boolean tutorReturnCancelledSlot(Long tutorID, Long meetingId);
 
     List<Appointment> findPendingAppointments(Long tutorId);
 

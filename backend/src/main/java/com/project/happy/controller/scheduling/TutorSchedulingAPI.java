@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.happy.dto.scheduling.AppointmentRequest;
-
-import com.project.happy.entity.Appointment;
 import com.project.happy.dto.scheduling.ApproveRequest;
 import com.project.happy.dto.scheduling.CancelRequest;
 import com.project.happy.dto.scheduling.RejectRequest;
+import com.project.happy.entity.Appointment;
 import com.project.happy.entity.Meeting;
 import com.project.happy.service.scheduling.ITutorSchedulingService;
 
@@ -66,8 +64,9 @@ public class TutorSchedulingAPI {
     // =================== Meetings ===================
 
     @GetMapping("/meetings/official")
-    public ResponseEntity<List<Appointment>> official(@RequestParam Long tutorId) {
-        List<Appointment> list = tutorService.viewOfficialAppointments(tutorId); // có thể là Appointment + các loại Meeting                                                                  // khác
+    public ResponseEntity<List<Meeting>> official(@RequestParam Long tutorId) {
+        List<Meeting> list = tutorService.viewOfficialMeetings(tutorId); // có thể là Appointment + các loại Meeting //
+                                                                         // khác
         return ResponseEntity.ok(list);
     }
 
@@ -79,6 +78,15 @@ public class TutorSchedulingAPI {
         } else {
             return ResponseEntity.badRequest().body("Cannot cancel meeting");
         }
+    }
+
+    @PostMapping("/tutor/{tutorId}/meetings/{meetingId}/return-slot")
+    public ResponseEntity<?> returnSlot(@PathVariable Long id, @PathVariable Long meetingId) {
+        boolean ok = tutorService.tutorReturnCancelledSlot(id, meetingId);
+        if (!ok) {
+            return ResponseEntity.ok("Tutor chọn KHÔNG trả lại slot.");
+        }
+        return ResponseEntity.ok("Slot đã trả vào lịch rảnh.");
     }
 
     @GetMapping("/meeting/{id}")

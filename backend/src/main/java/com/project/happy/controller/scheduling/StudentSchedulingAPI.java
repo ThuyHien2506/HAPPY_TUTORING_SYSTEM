@@ -11,11 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.happy.dto.scheduling.AppointmentRequest;
-import com.project.happy.entity.Appointment;
-import com.project.happy.dto.scheduling.ApproveRequest;
-import com.project.happy.dto.scheduling.CancelRequest;
 import com.project.happy.dto.freeslot.FreeSlotResponse;
+import com.project.happy.dto.scheduling.AppointmentRequest;
+import com.project.happy.dto.scheduling.CancelRequest;
+import com.project.happy.entity.Appointment;
 import com.project.happy.entity.Meeting;
 import com.project.happy.service.scheduling.IStudentSchedulingService;
 
@@ -53,10 +52,19 @@ public class StudentSchedulingAPI {
         return ResponseEntity.ok(list);
     }
 
+   // =================== Cancelable Meetings ===================
+    @GetMapping("/meetings/cancelable")
+    public ResponseEntity<List<Meeting>> getCancelableMeetings(@RequestParam Long studentId) {
+        List<Meeting> list = studentService.findCancellableMeetings(studentId);
+        return ResponseEntity.ok(list);
+    }
+
+
     // =================== Cancel Meeting ===================
     @PostMapping("/meetings/{id}/cancel")
     public ResponseEntity<String> cancel(@PathVariable Long id, @RequestBody CancelRequest req) {
         boolean success = studentService.cancelMeeting(id, req.getReason());
+
         if (success) {
             return ResponseEntity.ok("Meeting cancelled successfully");
         } else {
@@ -64,10 +72,10 @@ public class StudentSchedulingAPI {
         }
     }
 
-    // =================== View Official Appointments ===================
-     @GetMapping("/meetings/official")
-    public ResponseEntity<List<Appointment>> getOfficial(@RequestParam Long studentId) {
-        List<Appointment> list = studentService.viewOfficialAppointments(studentId);
+    // =================== View Official Meetings ===================
+    @GetMapping("/meetings/official")
+    public ResponseEntity<List<Meeting>> getOfficial(@RequestParam Long studentId) {
+        List<Meeting> list = studentService.viewOfficialMeetings(studentId);
         return ResponseEntity.ok(list);
     }
 
