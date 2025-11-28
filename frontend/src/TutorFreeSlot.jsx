@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import './TutorFreeSlot.css';
+import './TutorFreeSlot.css'; // Giữ nguyên file CSS của bạn
 
-const TutorFreeSlot = () => {
+const TutorSchedule = () => {
     // --- STATE ---
     const [viewMode, setViewMode] = useState('VIEW'); 
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
     const [dailySlots, setDailySlots] = useState([]); 
     const [formSlots, setFormSlots] = useState([]);   
 
-    // --- HÀM TẠO GIỜ 24H (00:00 -> 23:45) ---
+    // --- CẤU HÌNH AUTH ---
+    const AUTH_HEADER = 'Basic ' + btoa('user:93f1df6e-84d4-406d-98e0-a9ffd05e43da');
+
+    // --- 1. HÀM TẠO GIỜ 24H ---
     const generateTimeOptions = () => {
         const options = [];
         for (let h = 0; h < 24; h++) {
@@ -22,11 +25,11 @@ const TutorFreeSlot = () => {
     };
     const timeOptions = generateTimeOptions();
 
-    // --- API CALLS ---
+    // --- API GET ---
     const fetchDailySlots = (date) => {
         fetch(`http://localhost:8080/freeslots/daily?date=${date}`, {
             headers: { 
-                'Authorization': 'Basic ' + btoa('user:5a98730a-2c10-4dcd-9b5d-9ef524838cf3') // NHỚ THAY MẬT KHẨU MỚI TỪ LOG
+                'Authorization': AUTH_HEADER 
             }
         })
         .then(res => res.json())
@@ -66,27 +69,24 @@ const TutorFreeSlot = () => {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + btoa('user:5a98730a-2c10-4dcd-9b5d-9ef524838cf3') // NHỚ THAY MẬT KHẨU
+                'Authorization': AUTH_HEADER 
             },
             body: JSON.stringify(payload)
         })
         .then(async (res) => {
             if (res.ok) {
-                // Server trả về mảng các cảnh báo (List<String>)
+                // Đọc danh sách cảnh báo từ Server
                 const warnings = await res.json();
 
                 if (warnings && warnings.length > 0) {
-                    // Nếu có cảnh báo -> Hiện lên
-                    alert("Đã lưu thành công!\n- " + warnings.join("\n- "));
+                    alert("Đã lưu thành công! Lưu ý:\n- " + warnings.join("\n- "));
                 } else {
-                    // Không có cảnh báo -> Ngon lành
                     alert("Đã lưu lịch thành công!");
                 }
 
                 setViewMode('VIEW');
                 fetchDailySlots(selectedDate);
             } else {
-                // Lỗi Logic (Ví dụ Start > End) -> Hiện thông báo lỗi từ Server
                 const errorMsg = await res.text();
                 alert("Lỗi: " + errorMsg);
             }
@@ -96,120 +96,101 @@ const TutorFreeSlot = () => {
 
     // --- RENDER ---
     return (
-        <div className="layout">
-            {/* ... (Phần Header, Sidebar giữ nguyên như cũ) ... */}
-            <header className="header">
-                <div className="logo">🎓 TUTOR SYSTEM</div>
-                <div className="header-right">🔔 👤 Trần Văn B</div>
-            </header>
-
-            <div className="container">
-                <div className="sidebar">
-                    <div className="sidebar-item">📅 Buổi gặp mặt</div>
-                    <div className="sidebar-item">📖 Khóa học</div>
-                    <div className="sidebar-item active">⚙️ Hồ sơ cá nhân</div>
-                </div>
-
-                <div className="content">
-                    <div className="top-tabs">
-                        <button className="tab-btn">Thông tin cá nhân</button>
-                        <button className="tab-btn active">Lịch rảnh</button>
-                    </div>
-
-                    <div className="main-card">
-                        {/* VIEW MODE */}
-                        {viewMode === 'VIEW' && (
-                            <div className="view-mode-container">
-                                <div className="time-list-panel">
-                                    <div className="time-list-header">≪ {selectedDate} ≫</div>
-                                    <div className="time-list-body">
-                                        {dailySlots.length === 0 ? 
-                                            <div className="time-slot-item">Chưa có lịch</div> : 
-                                            dailySlots.map((s, i) => (
-                                                <div key={i} className="time-slot-item">
-                                                    {s.startTime.slice(0,5)} - {s.endTime.slice(0,5)}
-                                                </div>
-                                            ))
-                                        }
-                                    </div>
-                                </div>
-                                <div className="calendar-panel">
-                                    <button className="setup-btn" onClick={() => setViewMode('SETUP')}>
-                                        Thiết lập lịch rảnh
-                                    </button>
-                                    <div className="calendar-grid">
-                                        {[...Array(30)].map((_, i) => (
-                                            <div key={i} 
-                                                className={`cal-day ${i+1 === parseInt(selectedDate.split('-')[2]) ? 'selected' : ''}`}
-                                                onClick={() => setSelectedDate(`2025-10-${(i+1).toString().padStart(2,'0')}`)}
-                                            >
-                                                {i + 1}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* SETUP MODE */}
-                        {viewMode === 'SETUP' && (
-                            <div className="setup-mode-container">
-                                <div className="action-bar">
-                                    <button className="save-btn" onClick={handleSave}>Lưu</button>
-                                </div>
-                                <h3 className="setup-title">Thiết lập lịch rảnh</h3>
-                                <div className="date-picker-row">
-                                    Ngày: <input type="date" value={selectedDate} onChange={e=>setSelectedDate(e.target.value)} />
-                                </div>
-
-                                <div className="form-container">
-                                    <button className="add-time-btn" onClick={handleAddSlot}>+ Thêm thời gian</button>
-                                    
-                                    {formSlots.map((slot, i) => (
-                                        <div key={i} className="time-row">
-                                            <div className="input-group">
-                                                <label>Bắt đầu</label>
-                                                <select 
-                                                    className="input-box" 
-                                                    value={slot.startTime.slice(0,5)} 
-                                                    onChange={e => handleChangeTime(i, 'startTime', e.target.value)}
-                                                >
-                                                    {timeOptions.map(t => <option key={t} value={t}>{t}</option>)}
-                                                </select>
-                                            </div>
-
-                                            <div className="input-group">
-                                                <label>Kết thúc</label>
-                                                <select 
-                                                    className="input-box" 
-                                                    value={slot.endTime.slice(0,5)} 
-                                                    onChange={e => handleChangeTime(i, 'endTime', e.target.value)}
-                                                >
-                                                    {timeOptions.map(t => <option key={t} value={t}>{t}</option>)}
-                                                </select>
-                                            </div>
-                                            
-                                            <button className="delete-btn" onClick={() => handleRemoveSlot(i)}>✕</button>
-                                        </div>
-                                    ))}
-                                </div>
-                                
-                                <div style={{textAlign: 'right', marginTop: 20}}>
-                                    <button className="delete-btn" style={{fontSize: 14, textDecoration: 'underline'}} 
-                                            onClick={() => {setViewMode('VIEW'); fetchDailySlots(selectedDate);}}>
-                                        Hủy bỏ thay đổi
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
+        <div style={{ width: '100%', padding: '25px' }}>
+            <div className="top-tabs">
+                <button className="tab-btn">Thông tin cá nhân</button>
+                <button className="tab-btn active">Lịch rảnh</button>
             </div>
-            <footer className="footer">
-                <div>#TUTOR SUPPORT SYSTEM</div>
-            </footer>
+
+            <div className="main-card">
+                {/* VIEW MODE */}
+                {viewMode === 'VIEW' && (
+                    <div className="view-mode-container">
+                        <div className="time-list-panel">
+                            <div className="time-list-header">≪ {selectedDate} ≫</div>
+                            <div className="time-list-body">
+                                {dailySlots.length === 0 ? 
+                                    <div className="time-slot-item">Chưa có lịch</div> : 
+                                    dailySlots.map((s, i) => (
+                                        <div key={i} className="time-slot-item">
+                                            {s.startTime.slice(0,5)} - {s.endTime.slice(0,5)}
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                        <div className="calendar-panel">
+                            <button className="setup-btn" onClick={() => setViewMode('SETUP')}>
+                                Thiết lập lịch rảnh
+                            </button>
+                            <div className="calendar-grid">
+                                {[...Array(30)].map((_, i) => (
+                                    <div key={i} 
+                                        className={`cal-day ${i+1 === parseInt(selectedDate.split('-')[2]) ? 'selected' : ''}`}
+                                        onClick={() => setSelectedDate(`2025-10-${(i+1).toString().padStart(2,'0')}`)}
+                                    >
+                                        {i + 1}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* SETUP MODE */}
+                {viewMode === 'SETUP' && (
+                    <div className="setup-mode-container">
+                        <div className="action-bar">
+                            <button className="save-btn" onClick={handleSave}>Lưu</button>
+                        </div>
+                        <h3 className="setup-title">Thiết lập lịch rảnh</h3>
+                        <div className="date-picker-row">
+                            Ngày: <input type="date" value={selectedDate} onChange={e=>setSelectedDate(e.target.value)} />
+                        </div>
+
+                        <div className="form-container">
+                            <button className="add-time-btn" onClick={handleAddSlot}>+ Thêm thời gian</button>
+                            
+                            {formSlots.map((slot, i) => (
+                                <div key={i} className="time-row">
+                                    <div className="input-group">
+                                        <label>Bắt đầu</label>
+                                        <select 
+                                            className="input-box" 
+                                            value={slot.startTime.slice(0,5)} 
+                                            onChange={e => handleChangeTime(i, 'startTime', e.target.value)}
+                                        >
+                                            {timeOptions.map(t => <option key={t} value={t}>{t}</option>)}
+                                        </select>
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label>Kết thúc</label>
+                                        <select 
+                                            className="input-box" 
+                                            value={slot.endTime.slice(0,5)} 
+                                            onChange={e => handleChangeTime(i, 'endTime', e.target.value)}
+                                        >
+                                            {timeOptions.map(t => <option key={t} value={t}>{t}</option>)}
+                                        </select>
+                                    </div>
+                                    
+                                    <button className="delete-btn" onClick={() => handleRemoveSlot(i)}>✕</button>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div style={{textAlign: 'right', marginTop: 20}}>
+                            <button className="delete-btn" style={{fontSize: 14, textDecoration: 'underline'}} 
+                                    onClick={() => {setViewMode('VIEW'); fetchDailySlots(selectedDate);}}>
+                                Hủy bỏ thay đổi
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
 
-export default TutorFreeSlot;
+export default TutorSchedule;
