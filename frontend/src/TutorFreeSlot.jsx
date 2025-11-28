@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './TutorFreeSlot.css'; // Giữ nguyên file CSS của bạn
 
-const TutorSchedule = () => {
+const TutorFreeSlot = () => {
     // --- STATE ---
     const [viewMode, setViewMode] = useState('VIEW'); 
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
@@ -193,4 +193,4 @@ const TutorSchedule = () => {
     );
 };
 
-export default TutorSchedule;
+export default TutorFreeSlot;

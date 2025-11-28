@@ -1,4 +1,4 @@
-﻿/* src/Layout.css */
+﻿﻿/* src/Layout.css */
 
 body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #eef8ff; }
 
@@ -118,9 +118,14 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #eef8ff
   flex: 1;
   background-color: #eef8ff;
   padding: 0;
-  
-  /* Quan trọng: Cho phép vùng nội dung này cuộn độc lập */
-  overflow-y: auto; 
-  height: calc(100vh - 60px); /* Trừ đi chiều cao Header (60px) */
-  position: relative;
+
+  /* Không cho scroll ở container cha */
+  overflow: hidden;
+
+  width: 100%;
+  height: calc(100vh - 64px);
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
