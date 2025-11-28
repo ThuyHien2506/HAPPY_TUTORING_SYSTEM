@@ -31,6 +31,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 // --- MỞ KHÓA ĐỂ TEST ---
+                .requestMatchers("/api/student/**").permitAll()   // <–– thêm dòng này
                 .requestMatchers("/freeslots/**").permitAll()     // 1. API Lịch rảnh
                 .requestMatchers("/api/student/scheduling/**").permitAll() // 2. API Đặt lịch (MỚI THÊM)
                 // -----------------------
