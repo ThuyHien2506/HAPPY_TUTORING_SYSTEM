@@ -1,3 +1,16 @@
+<<<<<<< HEAD
+import './App.css';
+// import RegisterTutor from './RegisterTutor'; // Cái nào không dùng thì comment
+import Layout from './Layout'; // <--- QUAN TRỌNG: Bỏ comment dòng này
+import TutorFreeSlot from './TutorFreeSlot'; 
+// import AppointmentBooking from './AppointmentBooking';
+
+function App() {
+  return (
+    <Layout>
+      <TutorFreeSlot />
+    </Layout>
+=======
 import "./App.css";
 // import RegisterTutor from './RegisterTutor'; // Cái nào không dùng thì comment
 import LayoutTutor from "./layout/layoutTutor/Layout"; // <--- QUAN TRỌNG: Bỏ comment dòng này
@@ -35,6 +48,7 @@ function App() {
         />
       </Routes>
     </BrowserRouter>
+>>>>>>> main
   );
 }
 

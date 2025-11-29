@@ -1,14 +1,13 @@
 package com.project.happy.repository;
 
+import com.project.happy.entity.TutorSlot;
+import org.springframework.stereotype.Repository;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Repository;
-
-import com.project.happy.entity.TutorSlot;
 
 @Repository
 public class FreeSlotRepository implements IFreeSlotRepository {

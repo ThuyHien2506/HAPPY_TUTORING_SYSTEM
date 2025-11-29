@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import com.project.happy.dto.freeslot.FreeSlotResponse;
 import com.project.happy.entity.Appointment;
 import com.project.happy.entity.Meeting;
-import com.project.happy.entity.TutorSlot;
-import com.project.happy.repository.FreeSlotRepository;
 import com.project.happy.repository.MeetingRepository;
 import com.project.happy.service.freeslot.IFreeSlotService;
 
@@ -72,7 +70,6 @@ public class StudentSchedulingService implements IStudentSchedulingService {
 
     @Override
     public boolean cancelMeeting(Long meetingId, String reason) {
-
         Meeting meeting = meetingRepo.findById(meetingId);
         if (meeting == null || meeting.isCancelled()) {
             return false;

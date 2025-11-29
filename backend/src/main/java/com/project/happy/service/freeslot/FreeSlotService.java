@@ -297,7 +297,7 @@ public class FreeSlotService implements IFreeSlotService {
     }
 
     private TutorSlot createSlot(Long tutorId, LocalDate date, LocalTime start, LocalTime end) {
-        // Constructor đã sửa ở bước trước
+        
         return new TutorSlot(tutorId, date, start, end);
     }
 
