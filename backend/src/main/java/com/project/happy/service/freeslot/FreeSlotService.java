@@ -1,5 +1,16 @@
 package com.project.happy.service.freeslot;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.project.happy.dto.freeslot.FreeSlotRequest;
 import com.project.happy.dto.freeslot.FreeSlotResponse;
 import com.project.happy.entity.Appointment;
@@ -7,16 +18,6 @@ import com.project.happy.entity.MeetingStatus;
 import com.project.happy.entity.TutorSlot;
 import com.project.happy.repository.IFreeSlotRepository;
 import com.project.happy.repository.IMeetingRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FreeSlotService implements IFreeSlotService {

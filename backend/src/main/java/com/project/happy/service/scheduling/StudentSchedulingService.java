@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,8 @@ public class StudentSchedulingService implements IStudentSchedulingService {
 
     @Autowired
     private MeetingRepository meetingRepo;
+    @Autowired
+    private FreeSlotRepository freeslot;
 
     // Thay vì gọi Repo, ta gọi Service để đảm bảo logic Cắt/Gộp
     @Autowired
@@ -33,9 +33,16 @@ public class StudentSchedulingService implements IStudentSchedulingService {
     }
 
     @Override
-    public boolean bookAppointment(Long studentId, Long tutorId, LocalDateTime date, 
-                                   LocalDateTime startTime, LocalDateTime endTime, String topic) {
+    public boolean bookAppointment(Long studentId, Long tutorId, LocalDateTime date,
+            LocalDateTime startTime, LocalDateTime endTime, String topic) {
+        List<TutorSlot> availableSlots = freeslot.findAvailableByTutorIdAndDate(tutorId, startTime.toLocalDate());
+        boolean canBook = availableSlots.stream()
+                .anyMatch(s -> !startTime.toLocalTime().isBefore(s.getStartTime())
+                        && !endTime.toLocalTime().isAfter(s.getEndTime()));
 
+        if (!canBook) {
+            throw new IllegalArgumentException("Rất tiếc, khung giờ này đã có người đặt trước. Vui lòng làm mới trang và chọn một khung giờ khác.");
+        }
         // 1. Tạo và Lưu cuộc hẹn (Logic cũ)
         Appointment appointment = new Appointment(
                 System.currentTimeMillis(),
@@ -50,7 +57,8 @@ public class StudentSchedulingService implements IStudentSchedulingService {
         // 2. QUAN TRỌNG: Gọi sang FreeSlotService để CẮT SLOT RẢNH
         // (Chuyển khoảng thời gian này từ Available -> Booked)
         try {
-            freeSlotService.reserveSlot(tutorId, startTime.toLocalDate(), startTime.toLocalTime(), endTime.toLocalTime());
+            freeSlotService.reserveSlot(tutorId, startTime.toLocalDate(), startTime.toLocalTime(),
+                    endTime.toLocalTime());
         } catch (Exception e) {
             // Nếu lỗi (ví dụ slot không còn rảnh), in log (Thực tế nên ném lỗi để rollback)
             System.err.println("Lỗi khi cắt lịch rảnh: " + e.getMessage());
@@ -75,11 +83,10 @@ public class StudentSchedulingService implements IStudentSchedulingService {
             // 3. QUAN TRỌNG: TRẢ LẠI SLOT RẢNH KHI HỦY
             try {
                 freeSlotService.releaseSlot(
-                    meeting.getTutorId(), 
-                    meeting.getStartTime().toLocalDate(), 
-                    meeting.getStartTime().toLocalTime(), 
-                    meeting.getEndTime().toLocalTime()
-                );
+                        meeting.getTutorId(),
+                        meeting.getStartTime().toLocalDate(),
+                        meeting.getStartTime().toLocalTime(),
+                        meeting.getEndTime().toLocalTime());
             } catch (Exception e) {
                 System.err.println("Lỗi khi trả lịch rảnh: " + e.getMessage());
             }
@@ -90,13 +97,11 @@ public class StudentSchedulingService implements IStudentSchedulingService {
 
     @Override
     public List<FreeSlotResponse> viewTutorAvailableSlots(Long tutorId) {
-        System.out.println(">>> CALLED viewTutorAvailableSlots WITH tutorId = " + tutorId);
-
         LocalDate today = LocalDate.now();
         int currentMonth = today.getMonthValue();
         int currentYear = today.getYear();
 
-        // Lấy slot tháng này (Gọi qua Service để chỉ lấy List Available)
+        // Lấy slot tháng này (Gọi qua Service đểlấy List Available)
         List<FreeSlotResponse> thisMonth = freeSlotService.getMonthlySchedule(tutorId, currentMonth, currentYear);
 
         // Lấy slot tháng sau
@@ -104,18 +109,15 @@ public class StudentSchedulingService implements IStudentSchedulingService {
         int nextMonth = (currentMonth == 12) ? 1 : currentMonth + 1;
         int nextYear = (currentMonth == 12) ? currentYear + 1 : currentYear;
 
-        // SỬA TÊN BIẾN Ở ĐÂY: nextMonth -> nextMonthSlots
         List<FreeSlotResponse> nextMonthSlots = freeSlotService.getMonthlySchedule(
                 tutorId, nextMonth, nextYear);
 
-        // Gộp dữ liệu (Nhớ sửa cả chỗ gộp bên dưới)
         List<FreeSlotResponse> all = new ArrayList<>();
         all.addAll(thisMonth);
-        all.addAll(nextMonthSlots); // <--- Sửa chỗ này luôn
+        all.addAll(nextMonthSlots);
         // Sắp xếp theo ngày
         all.sort(Comparator.comparing(FreeSlotResponse::getDate));
 
-        System.out.println(">>> TOTAL DAYS WITH SLOTS FOUND = " + all.size());
         return all;
     }
 
@@ -138,5 +140,25 @@ public class StudentSchedulingService implements IStudentSchedulingService {
     @Override
     public Meeting viewMeetingDetails(Long meetingId) {
         return meetingRepo.findById(meetingId);
+    }
+
+    @Override
+    public List<Appointment> findCancellableAppointment(Long studentId) {
+        return meetingRepo.findCancellableAppointmentsByStudent(studentId);
+    }
+
+    @Override
+    public List<Appointment> viewOfficialAppointments(Long studentId) {
+        return meetingRepo.findOfficialAppointmentsByStudent(studentId);
+    }
+
+    @Override
+    public List<Meeting> viewOfficialMeetings(Long studentId) {
+        return meetingRepo.findOfficialMeetingsByStudent(studentId);
+    }
+
+    @Override
+    public List<Meeting> findCancellableMeetings(Long studentId) {
+        return meetingRepo.findCancellableMeetingsByStudent(studentId);
     }
 }

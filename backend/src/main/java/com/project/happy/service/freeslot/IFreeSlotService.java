@@ -1,10 +1,11 @@
 package com.project.happy.service.freeslot;
 
-import com.project.happy.dto.freeslot.FreeSlotRequest;
-import com.project.happy.dto.freeslot.FreeSlotResponse;
 import java.time.LocalDate;
 import java.time.LocalTime; // Nhớ import cái này
 import java.util.List;
+
+import com.project.happy.dto.freeslot.FreeSlotRequest; // Nhớ import cái này
+import com.project.happy.dto.freeslot.FreeSlotResponse;
 
 public interface IFreeSlotService {
     

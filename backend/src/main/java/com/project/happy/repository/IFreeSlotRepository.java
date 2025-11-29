@@ -1,8 +1,10 @@
+
 package com.project.happy.repository;
 
-import com.project.happy.entity.TutorSlot;
 import java.time.LocalDate;
 import java.util.List;
+
+import com.project.happy.entity.TutorSlot;
 
 public interface IFreeSlotRepository {
     // --- LIST 1: AVAILABLE (Rảnh thật sự - Hiện lên Frontend) ---

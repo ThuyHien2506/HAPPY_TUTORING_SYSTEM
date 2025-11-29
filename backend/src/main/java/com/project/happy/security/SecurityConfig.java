@@ -18,8 +18,8 @@ public class SecurityConfig {
 
     // 2. Constructor
     @Autowired
-    public SecurityConfig(MockSSOAuthenticationFilter mockSSOAuthenticationFilter, 
-                          RegistrationEnforcementFilter registrationEnforcementFilter) {
+    public SecurityConfig(MockSSOAuthenticationFilter mockSSOAuthenticationFilter,
+            RegistrationEnforcementFilter registrationEnforcementFilter) {
         this.mockSSOAuthenticationFilter = mockSSOAuthenticationFilter;
         this.registrationEnforcementFilter = registrationEnforcementFilter;
     }
@@ -28,22 +28,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                // --- MỞ KHÓA ĐỂ TEST ---
-                .requestMatchers("/freeslots/**").permitAll()     // 1. API Lịch rảnh
-                .requestMatchers("/api/student/scheduling/**").permitAll() // 2. API Đặt lịch (MỚI THÊM)
-                // -----------------------
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        // --- MỞ KHÓA ĐỂ TEST ---
+                        .requestMatchers("/freeslots/**").permitAll() // 1. API Lịch rảnh
+                        .requestMatchers("/api/student/**").permitAll() // 2. API Sinh viên
+                        .requestMatchers("/api/student/scheduling/**").permitAll() // 2. API Đặt lịch (MỚI THÊM)
+                        .requestMatchers("/api/tutor/**").permitAll()
+                        .requestMatchers("/api/feedbacks/**").permitAll() 
+                        .requestMatchers("/error").permitAll()
 
-                // Các dòng cũ của nhóm
-                .requestMatchers(HttpMethod.POST, "/api/tutor-registration/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/tutor-registration/**").permitAll()
-                .requestMatchers("/register-tutor", "/dashboard", "/").permitAll()
-                
-                // Tất cả cái khác phải đăng nhập
-                .anyRequest().authenticated()
-            )
-            .anonymous(Customizer.withDefaults());
+                        // -----------------------
+
+                        // Các dòng cũ của nhóm
+                        .requestMatchers(HttpMethod.POST, "/api/tutor-registration/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/tutor-registration/**").permitAll()
+                        .requestMatchers("/register-tutor", "/dashboard", "/").permitAll()
+
+                        // Tất cả cái khác phải đăng nhập
+                        .anyRequest().authenticated())
+                .anonymous(Customizer.withDefaults());
 
         // Thêm các bộ lọc
         http.addFilterBefore(mockSSOAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
