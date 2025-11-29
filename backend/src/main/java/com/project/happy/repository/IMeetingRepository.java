@@ -20,6 +20,8 @@ public interface IMeetingRepository {
     // Student-specific queries
     List<Appointment> findAllAppointmentsByStudent(Long studentId);    // all appointments, any status     // all meetings, any status
     List<Appointment> findApprovedAppointmentsByStudent(Long studentId);
+    List<Meeting> findApprovedMeetingByStudent(Long studentId);
+    List<Meeting> findApprovedMeetingByTutor(Long studentId);
     List<Appointment> findOfficialAppointmentsByStudent(Long studentId);
 
     List<Meeting> findOfficialMeetingsByStudent(Long studentId);
