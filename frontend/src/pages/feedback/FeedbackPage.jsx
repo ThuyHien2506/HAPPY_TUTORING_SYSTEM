@@ -20,21 +20,21 @@ const FeedbackPage = () => {
 
   const sampleMeetings = [
     {
-      meetingID: 1,
+      meetingId: 1,
       date: "2025-11-30",
       timestart: "08:00",
       timeend: "10:00",
       topic: "Ôn tập Toán Cao Cấp - Ma trận",
     },
     {
-      meetingID: 2,
+      meetingId: 2,
       date: "2025-12-01",
       timestart: "14:00",
       timeend: "16:00",
       topic: "Lập trình Web - ReactJS cơ bản",
     },
     {
-      meetingID: 3,
+      meetingId: 3,
       date: "2025-12-05",
       timestart: "09:30",
       timeend: "11:30",
@@ -48,13 +48,13 @@ const FeedbackPage = () => {
       fetch("http://localhost:8080/api/meetings")
         .then((res) => res.json())
         .then((data) => {
-          const found = data.find((m) => m.meetingID.toString() === id);
+          const found = data.find((m) => m.meetingId.toString() === id);
           if (found) setMeeting(found);
         })
         .catch((error) => {
           console.error("Lỗi khi tải thông tin buổi hẹn", error);
           const found = sampleMeetings.find(
-            (m) => m.meetingID.toString() === id
+            (m) => m.meetingId.toString() === id
           );
           if (found) setMeeting(found);
         });
@@ -62,7 +62,7 @@ const FeedbackPage = () => {
 
     //Lay lich su phan hoi
     const fetchHistory = () => {
-      fetch(`http://localhost:8080/api/feedbacks?meetingID=${id}`)
+      fetch(`http://localhost:8080/api/feedbacks?meetingId=${id}`)
         .then((res) => res.json())
         .then((data) => {
           setHistory(data);
@@ -81,7 +81,7 @@ const FeedbackPage = () => {
     }
 
     const payload = {
-      meetingID: parseInt(id),
+      meetingId: parseInt(id),
       rating: rating,
       comment: comment,
     };

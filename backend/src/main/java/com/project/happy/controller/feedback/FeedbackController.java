@@ -23,7 +23,7 @@ public class FeedbackController {
 
    //Lay feedback theo ID buoi hop
     @GetMapping
-    public List<Feedback> getFeedbacks(@RequestParam Long meetingID) {
-        return service.getFeedbackByMeeting(meetingID);
+    public List<Feedback> getFeedbacks(@RequestParam Long meetingId) {
+        return service.getFeedbackByMeeting(meetingId);
     }
 }

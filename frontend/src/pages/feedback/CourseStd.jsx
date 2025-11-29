@@ -7,21 +7,21 @@ const CourseStd = () => {
   //Du lieu mau khi API loi
   const sampleMeetings = [
     {
-      meetingID: 1,
+      meetingId: 1,
       date: "2025-11-30",
       timestart: "08:00",
       timeend: "10:00",
       topic: "Ôn tập Toán Cao Cấp - Ma trận",
     },
     {
-      meetingID: 2,
+      meetingId: 2,
       date: "2025-12-01",
       timestart: "14:00",
       timeend: "16:00",
       topic: "Lập trình Web - ReactJS cơ bản",
     },
     {
-      meetingID: 3,
+      meetingId: 3,
       date: "2025-12-05",
       timestart: "09:30",
       timeend: "11:30",
@@ -62,7 +62,7 @@ const CourseStd = () => {
             <p>Đang tải dữ liệu...</p>
           ) : (
             meetings.map((item) => (
-              <MeetingCard key={item.meetingID} data={item} />
+              <MeetingCard key={item.meetingId} data={item} />
             ))
           )}
         </div>

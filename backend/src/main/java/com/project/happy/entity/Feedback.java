@@ -3,29 +3,29 @@ package com.project.happy.entity;
 import java.time.LocalDateTime;
 
 public class Feedback {
-    private Long feedbackID;
-    private Long meetingID;
+    private Long feedbackId;
+    private Long meetingId;
     private Integer rating;
     private String comment;
     private LocalDateTime submitAt; 
 
     public Feedback() {  }
 
-    public Feedback(Long feedbackID, Long meetingID, Integer rating, String comment, LocalDateTime submitAt) {
-        this.feedbackID = feedbackID;
-        this.meetingID = meetingID;
+    public Feedback(Long feedbackId, Long meetingId, Integer rating, String comment, LocalDateTime submitAt) {
+        this.feedbackId = feedbackId;
+        this.meetingId = meetingId;
         this.rating = rating;
         this.comment = comment;
         this.submitAt = submitAt;
     }
 
-    public Long getFeedbackID() { return feedbackID; }
-    public Long getMeetingID() { return meetingID; }
+    public Long getFeedbackId() { return feedbackId; }
+    public Long getMeetingId() { return meetingId; }
     public Integer getRating() { return rating; }
     public String getComment() { return comment; }
     public LocalDateTime getSubmitAt() { return submitAt; }
-    public void setFeedbackID(Long feedbackID) { this.feedbackID = feedbackID; }
-    public void setMeetingID(Long meetingID) { this.meetingID = meetingID; }
+    public void setFeedbackId(Long feedbackId) { this.feedbackId = feedbackId; }
+    public void setMeetingId(Long meetingId) { this.meetingId = meetingId; }
     public void setRating(Integer rating) { this.rating = rating; }
     public void setComment(String comment) { this.comment = comment; }
     public void setSubmitAt(LocalDateTime submitAt) { this.submitAt = submitAt; }
