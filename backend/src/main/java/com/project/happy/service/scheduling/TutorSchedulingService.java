@@ -1,7 +1,5 @@
 package com.project.happy.service.scheduling;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.project.happy.entity.Appointment;
 import com.project.happy.entity.AppointmentStatus;
 import com.project.happy.entity.Meeting;
-import com.project.happy.entity.TutorSlot;
 import com.project.happy.repository.FreeSlotRepository;
 import com.project.happy.repository.IMeetingRepository;
 import com.project.happy.service.freeslot.IFreeSlotService;
@@ -22,8 +19,6 @@ public class TutorSchedulingService implements ITutorSchedulingService {
     @Autowired
     private IFreeSlotService freeSlotService;
     @Autowired
-    private FreeSlotRepository freeslot;
-
     public TutorSchedulingService(IMeetingRepository meetingRepo, FreeSlotRepository slotRepo) {
         this.meetingRepo = meetingRepo;
     }
@@ -53,16 +48,6 @@ public class TutorSchedulingService implements ITutorSchedulingService {
             // appointment.getStartTime(),
             // appointment.getEndTime()
             // );
-            LocalDate date = appointment.getStartTime().toLocalDate();
-            LocalTime start = appointment.getStartTime().toLocalTime();
-            LocalTime end = appointment.getEndTime().toLocalTime();
-            List<TutorSlot> availableSlots = freeslot.findAvailableByTutorIdAndDate(tutorId, date);
-            boolean canApprove = availableSlots.stream()
-                    .anyMatch(s -> !start.isBefore(s.getStartTime()) && !end.isAfter(s.getEndTime()));
-            if (!canApprove) {
-                throw new IllegalArgumentException(
-                        "Bạn không rảnh trong khung giờ này, không thể approve.");
-            }
             appointment.approve();
             String onlineLink = createOnlineLink(appointment);
             appointment.setOnlineLink(onlineLink);
