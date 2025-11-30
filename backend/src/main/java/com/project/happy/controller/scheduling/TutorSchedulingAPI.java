@@ -31,10 +31,22 @@ public class TutorSchedulingAPI {
     }
 
     // =================== Appointments ===================
+
     @GetMapping("/appointments/pending")
     public ResponseEntity<List<Appointment>> pending(@RequestParam Long tutorId) {
         List<Appointment> list = tutorService.viewPendingAppointments(tutorId);
         return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/appointments/{id}")
+    public ResponseEntity<Appointment> getAppointmentDetail(@PathVariable Long id) {
+        Appointment appointment = tutorService.viewAppointmentDetails(id);
+
+        if (appointment != null) {
+            return ResponseEntity.ok(appointment);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/appointments/{id}/approve")
