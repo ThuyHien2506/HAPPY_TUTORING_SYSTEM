@@ -13,13 +13,13 @@ public interface ITutorSchedulingService {
     boolean approveAppointment(Long appointmentId, Long tutorId);
 
     boolean rejectAppointment(Long appointmentId, Long tutorId, String reason);
+    List<Appointment> viewOfficialAppointments(Long tutorId);
     List<Meeting> viewOfficialMeetings(Long tutorId);
 
     boolean cancelMeeting(Long tutorId, Long meetingId, String reason);
-    boolean tutorReturnCancelledSlot(Long tutorID, Long meetingId);
+    public boolean tutorReturnCancelledSlot(Long tutorID, Long meetingId);
 
-   
-    List<Meeting> findCancellableMeetings(Long tutorId);
+    List<Appointment> findPendingAppointments(Long tutorId);
 
     //List<Appointment> findApprovedAppointments(Long tutorId);
 
@@ -28,5 +28,4 @@ public interface ITutorSchedulingService {
     Meeting viewMeetingDetails(Long meetingId);
 
     String createOnlineLink(Appointment appointment);
-    Appointment viewAppointmentDetails(Long appointmentId);
 }

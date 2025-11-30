@@ -1,30 +1,27 @@
 package com.project.happy.facade;
 
 import com.project.happy.entity.TutorRegistrationEntity;
-import com.project.happy.service.tutor.ITutorRegistrationService;
 import com.project.happy.service.tutor.MatchingEngine;
+import com.project.happy.service.tutor.TutorRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/**
- * Facade for TutorRegistration operations
- * Orchestrates service layer to provide high-level API to controllers
- * Only depends on ITutorRegistrationService interface
- */
 @Component
 public class TutorRegistrationFacade {
 
-    private final ITutorRegistrationService registrationService;
+    private final MatchingEngine matchingEngine;
+    private final TutorRegistrationService registrationService;
 
     @Autowired
-    public TutorRegistrationFacade(ITutorRegistrationService registrationService) {
+    public TutorRegistrationFacade(MatchingEngine matchingEngine, TutorRegistrationService registrationService) {
+        this.matchingEngine = matchingEngine;
         this.registrationService = registrationService;
     }
 
     public List<MatchingEngine.TutorSuggestion> suggestTutors(String subject) {
-        return registrationService.suggestTutors(subject);
+        return matchingEngine.suggestTutors(subject);
     }
 
     public TutorRegistrationEntity createRegistration(String studentId, String subject, String tutorId) {

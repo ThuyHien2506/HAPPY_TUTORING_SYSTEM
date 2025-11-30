@@ -109,8 +109,4 @@ public class FreeSlotService implements IFreeSlotService {
 
         strategyMap.get("release").execute(tutorId, req);
     }
-    public List<TutorSlot> getRawAvailableSlots(Long tutorId, LocalDate date) {
-    // Gọi trực tiếp Repository để lấy dữ liệu Entity thô
-    return repo.findAvailableByTutorIdAndDate(tutorId, date);
-}
 }

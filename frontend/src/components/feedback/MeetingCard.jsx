@@ -5,13 +5,15 @@ import "./MeetingCard.css";
 const MeetingCard = ({ data }) => {
   const navigate = useNavigate();
   return (
-    <div className="meeting-card-feedback">
+    <div className="meeting-card">
       <div className="card-header">
         <div className="meeting-title">Chủ đề: {data.topic}</div>
         <span
-          className={`status-badge ${data.isWorkshop ? "workshop" : "meeting"}`}
+          className={`status-badge ${
+            /*data.isWorkshop*/ true ? "workshop" : "meeting"
+          }`}
         >
-          {data.isWorkshop ? "✓ BUỔI TƯ VẤN" : "✓ BUỔI HẸN"}
+          {/*data.isWorkshop*/ true ? "✓ BUỔI HỘI THẢO" : "✓ BUỔI HẸN"}
         </span>
       </div>
 
@@ -20,7 +22,7 @@ const MeetingCard = ({ data }) => {
       <div className="card-actions">
         <button
           className="btn btn-primary btn-sm"
-          onClick={() => navigate(`/course/feedback/${data.meetingId}`)}
+          onClick={() => navigate(`/course/feedback/${data.meetingID}`)}
         >
           Phản hồi chất lượng
         </button>

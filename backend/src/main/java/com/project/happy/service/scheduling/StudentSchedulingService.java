@@ -1,4 +1,4 @@
-    package com.project.happy.service.scheduling;
+package com.project.happy.service.scheduling;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,9 +12,8 @@ import org.springframework.stereotype.Service;
 import com.project.happy.dto.freeslot.FreeSlotResponse;
 import com.project.happy.entity.Appointment;
 import com.project.happy.entity.Meeting;
-import com.project.happy.entity.MeetingStatus;
 import com.project.happy.entity.TutorSlot;
-
+import com.project.happy.repository.FreeSlotRepository;
 import com.project.happy.repository.MeetingRepository;
 import com.project.happy.service.freeslot.IFreeSlotService;
 
@@ -23,6 +22,8 @@ public class StudentSchedulingService implements IStudentSchedulingService {
 
     @Autowired
     private MeetingRepository meetingRepo;
+    @Autowired
+    private FreeSlotRepository freeslot;
 
     // Thay vì gọi Repo, ta gọi Service để đảm bảo logic Cắt/Gộp
     @Autowired
@@ -36,14 +37,13 @@ public class StudentSchedulingService implements IStudentSchedulingService {
     @Override
     public boolean bookAppointment(Long studentId, Long tutorId, LocalDateTime date,
             LocalDateTime startTime, LocalDateTime endTime, String topic) {
-        List<TutorSlot> availableSlots = freeSlotService.getRawAvailableSlots(tutorId, startTime.toLocalDate());
+        List<TutorSlot> availableSlots = freeslot.findAvailableByTutorIdAndDate(tutorId, startTime.toLocalDate());
         boolean canBook = availableSlots.stream()
                 .anyMatch(s -> !startTime.toLocalTime().isBefore(s.getStartTime())
                         && !endTime.toLocalTime().isAfter(s.getEndTime()));
 
         if (!canBook) {
-            throw new IllegalArgumentException(
-                    "Rất tiếc, khung giờ này đã có người đặt trước. Vui lòng làm mới trang và chọn một khung giờ khác.");
+            throw new IllegalArgumentException("Rất tiếc, khung giờ này đã có người đặt trước. Vui lòng làm mới trang và chọn một khung giờ khác.");
         }
         // 1. Tạo và Lưu cuộc hẹn (Logic cũ)
         Appointment appointment = new Appointment(
@@ -124,37 +124,44 @@ public class StudentSchedulingService implements IStudentSchedulingService {
         return all;
     }
 
+    // --- Các hàm xem lịch sử/chi tiết giữ nguyên ---
+    @Override
+    public List<Appointment> findApprovedAppointments(Long studentId) {
+        return meetingRepo.findApprovedAppointmentsByStudent(studentId);
+    }
+
     @Override
     public List<Appointment> viewAppointmentHistory(Long studentId) {
-        List<Appointment> list = meetingRepo.findAllAppointmentsByStudent(studentId);
-        list.forEach(m -> m.updateStatus(LocalDateTime.now()));
-        return list;
+        return meetingRepo.findAllAppointmentsByStudent(studentId);
+    }
+
+    @Override
+    public List<Appointment> findCancellableAppointmentByStudent(Long studentId) {
+        return meetingRepo.findCancellableAppointmentsByStudent(studentId);
     }
 
     @Override
     public Meeting viewMeetingDetails(Long meetingId) {
-        Meeting meeting = meetingRepo.findById(meetingId);
-        if (meeting != null)
-            meeting.updateStatus(LocalDateTime.now());
-        return meeting;
+        return meetingRepo.findById(meetingId);
+    }
+
+    @Override
+    public List<Appointment> findCancellableAppointment(Long studentId) {
+        return meetingRepo.findCancellableAppointmentsByStudent(studentId);
+    }
+
+    @Override
+    public List<Appointment> viewOfficialAppointments(Long studentId) {
+        return meetingRepo.findOfficialAppointmentsByStudent(studentId);
     }
 
     @Override
     public List<Meeting> viewOfficialMeetings(Long studentId) {
-        List<Meeting> list = meetingRepo.findOfficialMeetingsByStudent(studentId);
-        list.forEach(m -> m.updateStatus(LocalDateTime.now()));
-        return list;
+        return meetingRepo.findOfficialMeetingsByStudent(studentId);
     }
 
     @Override
     public List<Meeting> findCancellableMeetings(Long studentId) {
-        List<Meeting> officialMeetings = meetingRepo.findOfficialMeetingsByStudent(studentId);
-        LocalDateTime now = LocalDateTime.now();
-
-        return officialMeetings.stream()
-                .peek(m -> m.updateStatus(now))
-                .filter(m -> !m.isCancelled()
-                        && (m.getStatus() == MeetingStatus.SCHEDULED || m.getStatus() == MeetingStatus.ONGOING))
-                .toList();
+        return meetingRepo.findCancellableMeetingsByStudent(studentId);
     }
 }

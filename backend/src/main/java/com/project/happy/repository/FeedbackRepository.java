@@ -34,9 +34,9 @@ public class FeedbackRepository implements IFeedbackRepository {
     }
 
     @Override 
-    public List<Feedback> findByMeetingId(Long meetingId) {
+    public List<Feedback> findByMeetingID(Long meetingID) {
         return feedbacks.stream()
-                .filter(f -> f.getMeetingId().equals(meetingId))
+                .filter(f -> f.getMeetingID().equals(meetingID))
                 .sorted(Comparator.comparing(Feedback::getSubmitAt).reversed())
                 .collect(Collectors.toList());
     }

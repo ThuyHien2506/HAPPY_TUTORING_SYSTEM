@@ -28,8 +28,8 @@ public class FeedbackService implements IFeedbackService {
 
         Feedback entity = new Feedback();
         
-        entity.setFeedbackId(new Random().nextLong());
-        entity.setMeetingId(dto.getMeetingId());
+        entity.setFeedbackID(new Random().nextLong());
+        entity.setMeetingID(dto.getMeetingID());
         entity.setRating(dto.getRating());
         entity.setComment(dto.getComment());
         entity.setSubmitAt(LocalDateTime.now());
@@ -40,7 +40,7 @@ public class FeedbackService implements IFeedbackService {
 
     //Lay feedback theo ID buoi hop
     @Override
-    public List<Feedback> getFeedbackByMeeting(Long meetingId) {
-        return repository.findByMeetingId(meetingId);
+    public List<Feedback> getFeedbackByMeeting(Long meetingID) {
+        return repository.findByMeetingID(meetingID);
     }
 }

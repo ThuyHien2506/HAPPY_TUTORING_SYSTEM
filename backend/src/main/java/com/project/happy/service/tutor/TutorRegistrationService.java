@@ -2,7 +2,7 @@ package com.project.happy.service.tutor;
 
 import com.project.happy.entity.TutorRegistrationEntity;
 import com.project.happy.entity.TutorRegistrationStatus;
-import com.project.happy.repository.ITutorRegistrationRepository;
+import com.project.happy.repository.TutorRegistrationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,21 +11,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Implementation of ITutorRegistrationService
- * Provides business logic for managing tutor registrations
- * Depends on ITutorRegistrationRepository for data access and MatchingEngine for tutor matching
- */
 @Service
-public class TutorRegistrationService implements ITutorRegistrationService {
+public class TutorRegistrationService {
 
-    private final ITutorRegistrationRepository repository;
-    private final MatchingEngine matchingEngine;
+    private final TutorRegistrationRepository repository;
 
     @Autowired
-    public TutorRegistrationService(ITutorRegistrationRepository repository, MatchingEngine matchingEngine) {
+    public TutorRegistrationService(TutorRegistrationRepository repository) {
         this.repository = repository;
-        this.matchingEngine = matchingEngine;
     }
 
     @Transactional
@@ -61,9 +54,5 @@ public class TutorRegistrationService implements ITutorRegistrationService {
     public void approveRegistration(TutorRegistrationEntity registration) {
         registration.setStatus(TutorRegistrationStatus.APPROVED);
         repository.save(registration);
-    }
-
-    public List<MatchingEngine.TutorSuggestion> suggestTutors(String subject) {
-        return matchingEngine.suggestTutors(subject);
     }
 }
