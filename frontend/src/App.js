@@ -1,3 +1,91 @@
+// src/App.js
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+
+import HomePage from "./pages/HomePage";
+import SsoLoginPage from "./pages/SsoLoginPage";
+import SsoForgotPage from "./pages/SsoForgotPage";
+import StudentRegisterTutor from "./pages/student/StudentRegisterTutor";
+
+import Layout from "./Layout";                 // tutor layout
+import TutorHome from "./pages/tutor/TutorHome";
+import TutorMeetings from "./pages/tutor/TutorMeetings";
+import TutorCourses from "./pages/tutor/TutorCourses";
+import TutorProfile from "./pages/tutor/TutorProfile";
+import TutorFreeSlot from "./TutorFreeSlot";
+
+// ==== STUDENT IMPORTS ====
+import StudentLayout from "./pages/student/StudentLayout";
+import StudentHome from "./pages/student/StudentHome";
+import StudentMeetings from "./pages/student/StudentMeetings";
+import StudentCourses from "./pages/student/StudentCourses";
+import StudentProfile from "./pages/student/StudentProfile";
+
+function App() {
+  return (
+    <Routes>
+      {/* Landing */}
+      <Route path="/" element={<HomePage />} />
+
+      {/* SSO */}
+      <Route path="/login" element={<SsoLoginPage />} />
+      <Route path="/sso/forgot" element={<SsoForgotPage />} />
+
+      {/* ==== STUDENT (dùng StudentLayout + Outlet) ==== */}
+      <Route path="/student" element={<StudentLayout />}>
+        <Route index element={<StudentHome />} />
+        <Route path="meetings" element={<StudentMeetings />} />
+        <Route path="courses" element={<StudentCourses />} />
+        <Route path="profile" element={<StudentProfile />} />
+        <Route path="register-tutor" element={<StudentRegisterTutor />} />
+      </Route>
+
+      {/* ==== TUTOR (dùng Layout bọc children) ==== */}
+      <Route
+        path="/tutor/home"
+        element={
+          <Layout>
+            <TutorHome />
+          </Layout>
+        }
+      />
+      <Route
+        path="/tutor/meetings"
+        element={
+          <Layout>
+            <TutorMeetings />
+          </Layout>
+        }
+      />
+      <Route
+        path="/tutor/courses"
+        element={
+          <Layout>
+            <TutorCourses />
+          </Layout>
+        }
+      />
+      <Route
+        path="/tutor/profile"
+        element={
+          <Layout>
+            <TutorProfile />
+          </Layout>
+        }
+      />
+      <Route
+        path="/tutor/free-slots"
+        element={
+          <Layout>
+            <TutorFreeSlot />
+          </Layout>
+        }
+      />
+      <Route path="/tutor" element={<Navigate to="/tutor/home" />} />
+
+      {/* fallback */}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
 import "./App.css";
 // import RegisterTutor from './RegisterTutor';
 import LayoutTutor from "./layout/layoutTutor/Layout";

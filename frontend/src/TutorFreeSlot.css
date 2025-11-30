@@ -9,9 +9,19 @@ body {
 .top-tabs {
   display: flex;
   gap: 12px;
-  margin-bottom: 25px;
-  max-width: 330px; /* ĐIỀU CHỈNH: Giới hạn tổng độ rộng, làm nút ngắn hơn */
+  margin-bottom: 20px;
+
+  /* cho full 1 hàng, không wrap */
+  max-width: none;        /* bỏ giới hạn 330px */
+  flex-wrap: nowrap;      /* không cho xuống dòng */
 }
+
+.tab-btn {
+  padding: 10px 24px;
+  white-space: nowrap;    /* chữ dài cũng không xuống dòng trong nút */
+  flex: 0 0 auto;         /* để nút tự rộng theo text, không co lại */
+}
+
 
 .tab-btn {
   padding: 10px 15px;
