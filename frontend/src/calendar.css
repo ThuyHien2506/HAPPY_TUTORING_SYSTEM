@@ -1,0 +1,160 @@
+/* --- CALENDAR --- */
+.calendar {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    font-family: 'Segoe UI', sans-serif;
+    border: 1px solid #444;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding-bottom: 0;
+    
+    /* FIX DỊCH CHUYỂN LÊN TRÊN (Tăng lên -50px) */
+    margin-top: -50px; 
+}
+
+/* --- HEADER --- */
+.header {
+    background-color: #003366;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 0;
+}
+
+.header span {
+    font-weight: 500;
+    font-size: 16px;
+    color: white;
+    text-transform: capitalize;
+}
+
+.header button {
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    color: #b3c6ff;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: 0.2s;
+    font-weight: bold;
+}
+
+.header button:hover {
+    color: #fff;
+}
+
+/* --- WEEKDAYS ROW --- */
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: #f1f5f9;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid #444;
+}
+
+.weekday {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 700;
+    color: #555;
+    height: 60px;
+    border-right: 1px solid #444;
+    box-sizing: border-box;
+}
+
+.weekday:last-child {
+    border-right: none;
+}
+
+/* --- GRID DAYS --- */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin: 0;
+    padding: 0;
+}
+
+/* --- DAYS AND BLANKS --- */
+.day, .blank {
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    box-sizing: border-box;
+    position: relative;
+    border: 1px solid #444; 
+}
+
+/* Hàng đầu tiên nối liền header */
+.day:nth-child(-n+7),
+.blank:nth-child(-n+7) {
+    border-top: 1px solid #444;
+}
+
+/* Cột cuối cùng (Đảm bảo border phải) */
+.day:nth-child(7n),
+.blank:nth-child(7n) {
+    border-right: 1px solid #444;
+}
+
+.day:hover:not(.blank):not(.selected) {
+    background: #f0f7ff;
+    color: #1e2a5e;
+    font-weight: 600;
+}
+
+.blank {
+    background: #fcfcfc;
+    cursor: default;
+}
+
+/* --- TODAY (Vòng tròn mảnh) --- */
+.day.today:not(.selected) {
+    color: #003366;
+    font-weight: 700;
+    box-shadow: none;
+    border-color: #444; 
+    z-index: 1;
+}
+
+.day.today:not(.selected)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #003366; 
+    z-index: 0;
+}
+
+/* --- SELECTED DAY --- */
+.day.selected {
+    background: #e6f0ff;
+    color: #1e2a5e;
+    border: 1px solid #003366 !important;
+    font-weight: 700;
+    box-shadow: none !important;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Nếu hôm nay được chọn */
+.day.today.selected {
+    box-shadow: none !important;
+}

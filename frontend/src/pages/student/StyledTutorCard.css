@@ -1,0 +1,289 @@
+.background-border {
+  background-color: #f4f5f8;
+  border: 1px dashed;
+  border-color: #704fe6;
+  border-radius: 5px;
+  height: 556px;
+  position: relative;
+  width: 361px;
+}
+
+.background-border .container {
+  border-radius: 5px;
+  height: 243px;
+  left: 21px;
+  overflow: hidden;
+  position: absolute;
+  top: 21px;
+  width: calc(100% - 43px);
+}
+
+.background-border .link {
+  align-items: center;
+  display: flex;
+  height: 254px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 382px;
+}
+
+.background-border .course {
+  background-position: 50% 50%;
+  background-size: cover;
+  border-radius: 5px;
+  flex: 1;
+  height: 253.98px;
+}
+
+.background-border .background {
+  background-color: #17254e;
+  border-radius: 5px;
+  display: flex;
+  height: 40px;
+  left: 20px;
+  position: absolute;
+  top: 194px;
+  width: 166px;
+}
+
+.background-border .text-wrapper {
+  align-items: center;
+  color: #ffffff;
+  display: flex;
+  font-family: "Sora-Regular", Helvetica;
+  font-size: 12px;
+  font-weight: 400;
+  height: 12px;
+  justify-content: center;
+  letter-spacing: 0;
+  line-height: 12px;
+  margin-left: 30px;
+  margin-top: 13.5px;
+  white-space: nowrap;
+  width: 106.09px;
+}
+
+.background-border .symbol {
+  align-items: center;
+  color: #fc6441;
+  display: flex;
+  font-family: "Font Awesome 5 Pro-Solid", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  height: 14px;
+  justify-content: center;
+  left: 21px;
+  letter-spacing: 0;
+  line-height: 14px;
+  position: absolute;
+  top: 296px;
+  white-space: nowrap;
+  width: 79px;
+}
+
+.background-border .div {
+  align-items: center;
+  color: #4d5756;
+  display: flex;
+  font-family: "Epilogue-Medium", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  height: 32px;
+  justify-content: center;
+  left: 104px;
+  letter-spacing: 0;
+  line-height: 32px;
+  position: absolute;
+  top: 288px;
+  white-space: nowrap;
+  width: 28px;
+}
+
+.background-border .heading-link {
+  display: flex;
+  height: 66px;
+  left: 21px;
+  position: absolute;
+  top: 320px;
+  width: 329px;
+}
+
+.background-border .nguy-n-l-ng-n-ng-l-p {
+  align-items: center;
+  color: #0e2a46;
+  display: flex;
+  font-family: "Epilogue-SemiBold", Helvetica;
+  font-size: 22px;
+  font-weight: 600;
+  height: 66px;
+  justify-content: center;
+  letter-spacing: 0;
+  line-height: 33px;
+  width: 328.83px;
+}
+
+.background-border .paragraph-background {
+  background-color: #ffffff;
+  border-radius: 5px;
+  height: 50px;
+  left: 21px;
+  position: absolute;
+  top: 396px;
+  width: calc(100% - 43px);
+}
+
+.background-border .symbol-2 {
+  align-items: center;
+  color: #000000;
+  display: flex;
+  font-family: "Font Awesome 5 Pro-Solid", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  height: 14px;
+  justify-content: center;
+  left: 13px;
+  letter-spacing: 0;
+  line-height: 14px;
+  position: absolute;
+  top: 18px;
+  white-space: nowrap;
+  width: 37px;
+}
+
+.background-border .hk {
+  align-items: center;
+  color: #17254e;
+  display: flex;
+  font-family: "Sora-Regular", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  height: 32px;
+  justify-content: center;
+  left: 50px;
+  letter-spacing: 0;
+  line-height: 32px;
+  position: absolute;
+  top: 9px;
+  white-space: nowrap;
+  width: 60px;
+}
+
+.background-border .symbol-3 {
+  align-items: center;
+  color: #000000;
+  display: flex;
+  font-family: "Font Awesome 5 Pro-Solid", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  height: 14px;
+  justify-content: center;
+  left: 156px;
+  letter-spacing: 0;
+  line-height: 14px;
+  position: absolute;
+  top: 18px;
+  white-space: nowrap;
+  width: 35px;
+}
+
+.background-border .text-wrapper-2 {
+  align-items: center;
+  color: #17254e;
+  display: flex;
+  font-family: "Sora-Regular", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  height: 32px;
+  justify-content: center;
+  left: 199px;
+  letter-spacing: 0;
+  line-height: 32px;
+  position: absolute;
+  top: 9px;
+  white-space: nowrap;
+}
+
+.background-border .image {
+  background-position: 50% 50%;
+  background-size: cover;
+  border: 2px solid;
+  border-color: #704fe6;
+  border-radius: 22px;
+  height: 44px;
+  left: 21px;
+  position: absolute;
+  top: calc(50.00% + 197px);
+  width: 44px;
+}
+
+.background-border .text-wrapper-3 {
+  align-items: center;
+  color: #17254e;
+  display: flex;
+  font-family: "Epilogue-Medium", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  height: 32px;
+  justify-content: center;
+  left: 75px;
+  letter-spacing: 0;
+  line-height: 32px;
+  position: absolute;
+  top: 487px;
+  white-space: nowrap;
+  width: 97px;
+}
+
+.background-border .link-2 {
+  background-color: #003366;
+  border-radius: 50px;
+  display: flex;
+  gap: 6.7px;
+  height: 40px;
+  left: 218px;
+  position: absolute;
+  top: 487px;
+  width: 128px;
+}
+
+.background-border .text-wrapper-4 {
+  align-items: center;
+  color: #ffffff;
+  display: flex;
+  font-family: "Sora-Regular", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  height: 40px;
+  justify-content: center;
+  letter-spacing: 0;
+  line-height: 40px;
+  margin-left: 30px;
+  white-space: nowrap;
+  width: 40.82px;
+}
+
+.background-border .SVG {
+  align-self: center;
+  height: 8px;
+  margin-top: 2.5px;
+  position: relative;
+  width: 21px;
+}
+
+.background-border .vector {
+  height: 92.05%;
+  left: 0;
+  position: absolute;
+  top: 3.97%;
+  width: 97.62%;
+}
+
+/* overrides to fine-tune spacing & alignment */
+.background-border .course { height:150px !important; }
+.background-border .heading-link { top:172px !important; height:52px; }
+.background-border .paragraph-background { top:208px !important; height:48px; }
+.background-border .image { top:292px !important; height:44px; width:44px; left:12px; }
+.background-border .text-wrapper-3 { top:292px !important; left:64px; }
+.background-border .link-2 { top:288px !important; left:186px; height:36px; width:92px; }
+.background-border .nguy-n-l-ng-n-ng-l-p { line-height:1.15; max-height:48px; overflow:hidden; display:block; }
