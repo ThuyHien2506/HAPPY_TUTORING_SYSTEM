@@ -30,5 +30,7 @@ public interface IStudentSchedulingService {
     //boolean checkTutorSlotAvailability(int tutorId, LocalDateTime date, LocalDateTime start, LocalDateTime end);
 
     Meeting viewMeetingDetails(Long meetingId);
+    
+
 
 }
