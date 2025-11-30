@@ -1,15 +1,12 @@
-/* src/AppointmentBooking.css */
+/* src/StudentAppointment.css */
 
 /* ----- GLOBAL ----- */
 .booking-page {
   padding: 30px 40px;
   background: linear-gradient(135deg, #e9f0ff, #f7faff);
   min-height: calc(100vh - 64px);
-  
-  /* SỬA QUAN TRỌNG: Bắt buộc chiếm hết chiều ngang */
   width: 100%; 
   box-sizing: border-box; 
-  
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -48,17 +45,15 @@
   background-color: #dfe8ff;
 }
 
-/* SỬA Ở ĐÂY: Thêm .tab-btn dính liền vào để tăng độ ưu tiên */
 .tab-btn.tab-btn-active {
-  background-color: #003366 !important; /* Thêm !important cho chắc chắn */
+  background-color: #003366 !important;
   color: white !important;
   border-color: #003366;
   box-shadow: 0 4px 10px rgba(26, 42, 102, 0.3);
 }
 
-/* SỬA THÊM: Khi hover vào nút đang active thì vẫn giữ màu đậm */
 .tab-btn.tab-btn-active:hover {
-  background-color: #002244 !important; /* Màu đậm hơn chút xíu khi hover vào nút đang chọn */
+  background-color: #002244 !important;
   opacity: 1;
 }
 
@@ -80,7 +75,7 @@
   border-radius: 12px;
   background-color: white;
   border: 1px solid #cce0ff;
-  width: fit-content; /* Chỉ rộng bằng nội dung */
+  width: fit-content;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 .avatar-circle {
@@ -94,7 +89,7 @@
   justify-content: center;
   font-weight: 600;
   font-size: 16px;
-  flex-shrink: 0; /* Không cho avatar bị bóp méo */
+  flex-shrink: 0;
 }
 .tutor-info {
   display: flex;
@@ -116,11 +111,8 @@
   padding: 25px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.08);
   backdrop-filter: blur(6px);
-  
-  /* SỬA: Đảm bảo card luôn căng full chiều ngang của cha */
   width: 100%;
   box-sizing: border-box;
-  
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -140,42 +132,23 @@
   display: flex;
   gap: 30px;
   align-items: flex-start;
-  width: 100%; /* Full width */
+  width: 100%;
 }
 
 /* CỘT TRÁI: CALENDAR */
 .calendar-section {
-  flex: 0 0 380px; /* Cố định 380px */
+  flex: 0 0 380px;
   max-width: 100%;
-}
-
-.calendar-custom {
-  width: 100%;
-  border-radius: 12px !important;
-  border: 1px solid #cce0ff !important;
-  font-family: inherit;
-  padding: 10px !important;
-  background: white;
-}
-.calendar-day-available {
-  background-color: #f0f7ff !important;
-  color: #003366 !important;
-  font-weight: 600;
-  border-radius: 6px;
-}
-.react-calendar__tile--active {
-  background: #003366 !important;
-  color: white !important;
 }
 
 /* CỘT PHẢI: FORM */
 .booking-right {
-  flex: 1; /* Chiếm hết phần còn lại */
+  flex: 1;
   background: white;
   padding: 20px;
   border-radius: 12px;
   border: 1px solid #eee;
-  min-width: 0; /* Fix lỗi flex item không co lại được */
+  min-width: 0;
 }
 
 /* ----- FORM INPUTS ----- */
@@ -265,11 +238,24 @@
   font-size: 15px;
 }
 
+.appointment-meta {
+  font-size: 13px;
+  color: #6b7280;
+  display: flex;
+  gap: 6px;
+}
+
+.appointment-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .status-badge {
-  padding: 5px 12px;
-  border-radius: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
 }
 .status-pending { background-color: #fff8e1; color: #f57c00; }
@@ -277,11 +263,12 @@
 .status-rejected { background-color: #ffebee; color: #c62828; }
 
 .btn-cancel-appointment {
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
   border: 1px solid #ef5350;
   background-color: white;
   color: #ef5350;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
@@ -291,7 +278,7 @@
   color: white;
 }
 
-/* --- MEETING LIST STYLES (Thêm mới) --- */
+/* --- MEETING LIST STYLES (ĐÃ CHỈNH SỬA) --- */
 .meeting-list-container {
   display: flex;
   flex-direction: column;
@@ -300,22 +287,24 @@
 }
 
 .meeting-card {
-  background-color: #eef6ff; /* Màu nền xanh nhạt */
+  /* Giữ nguyên nền xanh nhạt và viền trái đậm */
+  background-color: #f0f7ff; 
   border-radius: 12px;
   padding: 20px 24px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   transition: 0.2s;
+  
   border: 1px solid #dae9fa;
+  border-left: 5px solid #003366; 
 }
 
 .meeting-card:hover {
-  border-color: #003366;
-  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.1);
+  box-shadow: 0 6px 15px rgba(0, 51, 102, 0.15);
+  transform: translateY(-2px);
 }
 
-/* Cột thông tin bên trái */
 .meeting-info {
   display: flex;
   flex-direction: column;
@@ -326,8 +315,8 @@
 
 .meeting-topic {
   font-size: 16px;
-  font-weight: 600;
-  color: #1f2a3c;
+  font-weight: 700;
+  color: #003366;
 }
 
 .meeting-time, .meeting-detail {
@@ -335,7 +324,6 @@
   color: #4b5563;
 }
 
-/* Cột hành động bên phải */
 .meeting-actions {
   display: flex;
   flex-direction: column;
@@ -344,7 +332,6 @@
   min-width: 120px;
 }
 
-/* Badge (Nhãn) */
 .meeting-badge {
   padding: 5px 12px;
   border-radius: 6px;
@@ -355,21 +342,20 @@
   white-space: nowrap;
 }
 
-/* Style cho Buổi hẹn (Màu xanh lá) */
+/* Style cho Buổi hẹn (Giữ nguyên) */
 .badge-appointment {
-  background-color: #e0f9f0;
-  color: #059669;
-  border: 1px solid #a7f3d0;
+  background-color: #ffffff;
+  color: #059669; /* Xanh lá */
+  border: 1px solid #059669;
 }
 
-/* Style cho Hội thảo/Tư vấn (Màu đỏ/hồng) */
+/* UPDATE: Style cho Hội thảo/Tư vấn (Chuyển sang Xanh Lá giống Appointment) */
 .badge-consultation {
-  background-color: #ffebee;
-  color: #c62828;
-  border: 1px solid #fecaca;
+  background-color: #ffffff;
+  color: #059669; /* Đổi thành xanh lá */
+  border: 1px solid #059669; /* Đổi viền thành xanh lá */
 }
 
-/* Nút Hủy */
 .btn-cancel-meeting {
   background-color: #b91c1c;
   color: white;
@@ -380,10 +366,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
+  box-shadow: 0 2px 5px rgba(185, 28, 28, 0.2);
 }
 
 .btn-cancel-meeting:hover {
   background-color: #991b1b;
+  transform: translateY(-1px);
 }
 
 .status-cancelled {
@@ -393,4 +381,91 @@
   border: 1px dashed #b91c1c;
   padding: 4px 8px;
   border-radius: 4px;
+  background: #fff;
+}
+
+/* --- MODAL STYLES --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(3px);
+}
+
+.modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  width: 450px;
+  max-width: 90%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+  font-size: 18px;
+  font-weight: 700;
+  color: #003366;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.modal-body textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.modal-body textarea:focus {
+  outline: none;
+  border-color: #003366;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+.btn-modal-close {
+  background: #f3f4f6;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-modal-confirm {
+  background: #b91c1c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
 }
