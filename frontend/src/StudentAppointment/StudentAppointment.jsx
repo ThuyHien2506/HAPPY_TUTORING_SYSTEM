@@ -1,5 +1,5 @@
-// src/AppointmentBooking.jsx
-import "./AppointmentBooking.css";
+// src/StudentAppointment.jsx
+import "./StudentAppointment.css"; 
 import React, { useState, useEffect } from "react";
 import Calendar from "./Calendar"; 
 
@@ -9,12 +9,49 @@ import {
   getTutorFreeSlots,
   getStudentAppointments,
   cancelAppointment,
-  getOfficialMeetings, // <-- IMPORT MỚI
-  cancelMeeting        // <-- IMPORT MỚI
-} from "../service/studentService"; // <-- Đảm bảo đường dẫn đúng folder services
+  getOfficialMeetings, 
+  cancelMeeting        
+} from "../service/studentService"; 
 
-function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
-  // --------- STATE ----------
+// --- MOCK DATA ---
+const rawSampleData = [
+  {
+    meetingID: 1,
+    date: "2025-11-30",
+    timestart: "08:00",
+    timeend: "10:00",
+    topic: "Ôn tập Toán Cao Cấp - Ma trận",
+  },
+  {
+    meetingID: 2,
+    date: "2025-12-01",
+    timestart: "14:00",
+    timeend: "16:00",
+    topic: "Lập trình Web - ReactJS cơ bản",
+  },
+  {
+    meetingID: 3,
+    date: "2025-12-05",
+    timestart: "09:30",
+    timeend: "11:30",
+    topic: "Tiếng Anh giao tiếp - Topic: Travel",
+  },
+];
+
+const formattedSampleMeetings = rawSampleData.map((item, index) => {
+  return {
+    meetingId: item.meetingID,
+    topic: item.topic,
+    startTime: `${item.date}T${item.timestart}:00`, 
+    endTime: `${item.date}T${item.timeend}:00`,
+    type: index === 1 ? "CONSULTATION" : "APPOINTMENT", 
+    status: "SCHEDULED", 
+    onlineLink: "https://meet.google.com/sample-link",
+  };
+});
+
+function StudentAppointment({ studentId = 1, tutorId = 1 }) {
+  // --------- STATE CHÍNH ----------
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(""); 
   const [preferredStart, setPreferredStart] = useState(""); 
@@ -24,23 +61,24 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
   const [statusMsg, setStatusMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   
-  // State cho Tab Lịch hẹn (Booking History)
   const [appointments, setAppointments] = useState([]);
   const [appointmentsLoading, setAppointmentsLoading] = useState(false);
   const [appointmentsError, setAppointmentsError] = useState("");
 
-  // State cho Tab Danh sách buổi gặp mặt (Official Meetings)
   const [meetingList, setMeetingList] = useState([]);
   const [loadingMeetings, setLoadingMeetings] = useState(false);
 
-  // tab: "list" | "book" | "consult"
   const [activeTab, setActiveTab] = useState("list"); 
 
-  // --------- LỊCH RẢNH TUTOR ----------
   const [freeSlots, setFreeSlots] = useState([]);          
   const [availableRanges, setAvailableRanges] = useState([]); 
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [slotsError, setSlotsError] = useState("");
+
+  // --------- STATE CHO MODAL HỦY ----------
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [selectedMeetingId, setSelectedMeetingId] = useState(null);
+  const [cancelReasonInput, setCancelReasonInput] = useState("");
 
   // --------- HELPERS ----------
   const toLocalDateString = (d) => {
@@ -52,7 +90,6 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
 
   const formatDateForInput = (d) => toLocalDateString(d);
 
-  // Format hiển thị ngày giờ đẹp: "14:00 - 17:00, ngày 27/10/2025"
   const formatDateTimeFull = (startStr, endStr) => {
     if (!startStr || !endStr) return "N/A";
     const start = new Date(startStr);
@@ -65,9 +102,7 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
     return `${startTime} - ${endTime}, ngày ${dateLabel}`;
   };
 
-  // --------- API CALLS ----------
-
-  // 1. Lấy Lịch rảnh (Tab Book)
+  // --------- API CALLS (Giữ nguyên) ----------
   useEffect(() => {
     if (activeTab === 'book') {
         const fetchSlots = async () => {
@@ -103,7 +138,6 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
     }
   }, [tutorId, activeTab]); 
   
-  // 2. Lấy Lịch sử Appointment (Tab Book - Bottom)
   const loadAppointments = async () => {
     try {
       setAppointmentsLoading(true);
@@ -124,14 +158,19 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
     }
   }, [studentId, activeTab]);
 
-  // 3. Lấy Danh sách Meeting chính thức (Tab List)
   const fetchOfficialMeetings = async () => {
     try {
       setLoadingMeetings(true);
       const data = await getOfficialMeetings(studentId || 1);
-      setMeetingList(Array.isArray(data) ? data : []);
+      
+      if (Array.isArray(data) && data.length > 0) {
+        setMeetingList(data);
+      } else {
+        setMeetingList(formattedSampleMeetings);
+      }
+
     } catch (err) {
-      console.error("Lỗi tải meetings:", err);
+      setMeetingList(formattedSampleMeetings); 
     } finally {
       setLoadingMeetings(false);
     }
@@ -143,8 +182,7 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
     }
   }, [studentId, activeTab]);
 
-  // --------- HANDLERS ----------
-
+  // --------- HANDLERS CHUNG ----------
   const handleChangeDate = (newDate) => {
     setDate(newDate);
     const key = toLocalDateString(newDate);
@@ -171,37 +209,16 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
 
   const availableDatesList = freeSlots.map(slot => slot.date);
 
-  // Submit Đặt lịch
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatusMsg("");
     setErrorMsg("");
 
-    if (!time) {
-      setErrorMsg("Vui lòng chọn khung giờ rảnh của tutor.");
-      return;
-    }
-    if (!preferredStart || !preferredEnd) {
-      setErrorMsg("Vui lòng nhập giờ hẹn bạn mong muốn.");
-      return;
-    }
-    if (!topic.trim()) {
-      setErrorMsg("Vui lòng nhập nội dung buổi hẹn.");
-      return;
-    }
+    if (!time) { setErrorMsg("Vui lòng chọn khung giờ rảnh của tutor."); return; }
+    if (!preferredStart || !preferredEnd) { setErrorMsg("Vui lòng nhập giờ hẹn bạn mong muốn."); return; }
+    if (!topic.trim()) { setErrorMsg("Vui lòng nhập nội dung buổi hẹn."); return; }
 
     const dateKey = toLocalDateString(date); 
-    // Logic validate giờ... (giữ nguyên như cũ)
-    const selectedSlot = availableRanges.find((range) => {
-        const startLabel = range.startTime.slice(0, 5); 
-        const endLabel = range.endTime.slice(0, 5);     
-        const label = `${startLabel} - ${endLabel}`;
-        return label === time;
-    });
-
-    // Simple validation (bạn có thể giữ lại logic toMinutes kỹ hơn ở code cũ nếu cần)
-    if (!selectedSlot) { /* ... */ }
-
     const studentTimeRange = `${preferredStart} - ${preferredEnd}`;
 
     try {
@@ -214,7 +231,7 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
       });
 
       setStatusMsg("Đặt lịch thành công!");
-      loadAppointments(); // Reload list dưới
+      loadAppointments(); 
     } catch (err) {
       console.error("Booking error:", err);
       const status = err.response?.status;
@@ -223,25 +240,50 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
     }
   };
 
-  // Handler Hủy Meeting (Tab List)
-  const handleCancelMeeting = async (meetingId) => {
-    const reason = window.prompt("Vui lòng nhập lý do hủy:");
-    if (reason === null) return; 
-    if (!reason.trim()) {
-      alert("Lý do không được để trống!");
+  // --------- HANDLERS CHO MODAL HỦY ----------
+  
+  // 1. Mở Modal
+  const handleOpenCancelModal = (meetingId) => {
+    setSelectedMeetingId(meetingId);
+    setCancelReasonInput(""); // Reset lý do
+    setShowCancelModal(true);
+  };
+
+  // 2. Đóng Modal
+  const handleCloseCancelModal = () => {
+    setShowCancelModal(false);
+    setSelectedMeetingId(null);
+  };
+
+  // 3. Xác nhận hủy (Gọi API)
+  const handleConfirmCancel = async () => {
+    if (!cancelReasonInput.trim()) {
+      alert("Vui lòng nhập lý do hủy!");
       return;
     }
 
+    // Xử lý Mock Data
+    const isMock = formattedSampleMeetings.some(m => m.meetingId === selectedMeetingId);
+    if (isMock) {
+        alert("Đây là dữ liệu mẫu, thao tác hủy đã được ghi nhận trên giao diện demo!");
+        setMeetingList(prev => prev.map(m => 
+            m.meetingId === selectedMeetingId ? { ...m, status: "CANCELLED" } : m
+        ));
+        handleCloseCancelModal();
+        return;
+    }
+
+    // Xử lý Real Data
     try {
-      await cancelMeeting(meetingId, reason);
+      await cancelMeeting(selectedMeetingId, cancelReasonInput);
       alert("Đã hủy thành công!");
-      fetchOfficialMeetings(); // Load lại list
+      fetchOfficialMeetings(); 
+      handleCloseCancelModal();
     } catch (err) {
       alert("Hủy thất bại: " + (err.response?.data || "Lỗi server"));
     }
   };
 
-  // Handler Hủy Appointment (Tab Book - History)
   const handleCancelAppointment = async (appt) => {
     const reason = window.prompt("Lý do hủy:");
     if (!reason) return;
@@ -255,7 +297,6 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
 
   // --------- RENDER COMPONENT ----------
 
-  // 1. Render List cho Tab "Danh sách buổi gặp mặt"
   const renderMeetingList = () => {
     if (loadingMeetings) return <p>Đang tải danh sách...</p>;
     if (meetingList.length === 0) return <p>Bạn chưa có buổi gặp mặt nào sắp tới.</p>;
@@ -263,16 +304,18 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
     return (
       <div className="meeting-list-container">
         {meetingList.map((mt) => {
-          // Backend trả về type: "APPOINTMENT" hoặc "CONSULTATION"
           const isAppointment = mt.type === "APPOINTMENT";
           const badgeLabel = isAppointment ? "BUỔI HẸN" : "BUỔI HỘI THẢO";
           const badgeClass = isAppointment ? "badge-appointment" : "badge-consultation";
-          
           const locationInfo = mt.onlineLink ? `Online: ${mt.onlineLink}` : "Hình thức: Online (Google Meet)";
+
+          // LOGIC KIỂM TRA THỜI GIAN (Chỉ cho phép hủy nếu thời gian > hiện tại)
+          const meetingStartTime = new Date(mt.startTime);
+          const now = new Date();
+          const isFuture = meetingStartTime > now;
 
           return (
             <div key={mt.meetingId} className="meeting-card">
-              {/* CỘT TRÁI */}
               <div className="meeting-info">
                 <div className="meeting-topic">
                   Chủ đề: {mt.topic}
@@ -285,19 +328,24 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
                 </div>
               </div>
 
-              {/* CỘT PHẢI */}
               <div className="meeting-actions">
                 <span className={`meeting-badge ${badgeClass}`}>
                   {badgeLabel}
                 </span>
                 
-                {mt.status === "SCHEDULED" && (
+                {/* Chỉ hiện nút Hủy nếu: Status là SCHEDULED VÀ Thời gian là Tương lai */}
+                {mt.status === "SCHEDULED" && isFuture && (
                   <button 
                     className="btn-cancel-meeting"
-                    onClick={() => handleCancelMeeting(mt.meetingId)}
+                    onClick={() => handleOpenCancelModal(mt.meetingId)}
                   >
                     Hủy đăng ký
                   </button>
+                )}
+
+                {/* Nếu đã quá hạn nhưng chưa hoàn thành (ví dụ pending) thì không hiện nút hủy */}
+                {mt.status === "SCHEDULED" && !isFuture && (
+                   <span style={{fontSize: '12px', color: '#666', fontStyle:'italic'}}>Đã diễn ra</span>
                 )}
                 
                 {mt.status === "CANCELLED" && (
@@ -311,7 +359,6 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
     );
   };
 
-  // 2. Render List cho Tab "Lịch hẹn" (Lịch sử Booking)
   const renderAppointmentList = () => {
     if (appointmentsLoading) return <p>Đang tải...</p>;
     if (!appointments.length) return <p>Hiện chưa có lịch hẹn nào.</p>;
@@ -356,7 +403,6 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
 
   return (
     <div className="booking-page">
-      {/* TABS */}
       <div className="booking-tabs">
         <button
           className={`tab-btn ${activeTab === "list" ? "tab-btn-active" : ""}`}
@@ -378,7 +424,6 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
         </button>
       </div>
 
-      {/* TUTOR INFO */}
       <div className="tutor-section">
         <div className="tutor-section-title">Tutor của bạn</div>
         <div className="tutor-card">
@@ -390,7 +435,6 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
         </div>
       </div>
 
-      {/* TAB: DANH SÁCH BUỔI GẶP MẶT */}
       {activeTab === "list" && (
         <div className="booking-card">
           <h3 className="card-section-title">Buổi gặp mặt của tôi</h3>
@@ -400,7 +444,6 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
         </div>
       )}
 
-      {/* TAB: LỊCH HẸN (BOOKING) */}
       {activeTab === "book" && (
         <>
           <div className="booking-card">
@@ -417,7 +460,6 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
 
               <div className="booking-right">
                 <form className="booking-form" onSubmit={handleSubmit}>
-                  {/* ... (Giữ nguyên form inputs như cũ) ... */}
                    <div className="form-group">
                     <label>Ngày đã chọn</label>
                     <div className="form-input-wrapper">
@@ -467,7 +509,6 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
         </>
       )}
 
-      {/* TAB: ĐĂNG KÍ BUỔI TƯ VẤN */}
       {activeTab === "consult" && (
         <div className="booking-card">
           <h3 className="card-section-title">Đăng kí buổi tư vấn</h3>
@@ -476,8 +517,33 @@ function AppointmentBooking({ studentId = 1, tutorId = 1 }) {
           </div>
         </div>
       )}
+
+      {/* --- MODAL HỦY ĐĂNG KÝ (POPUP) --- */}
+      {showCancelModal && (
+        <div className="modal-overlay" onClick={handleCloseCancelModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">Xác nhận hủy đăng ký</div>
+            <div className="modal-body">
+              <p style={{marginBottom: '10px', fontSize: '14px', color:'#555'}}>
+                Bạn có chắc chắn muốn hủy buổi gặp mặt này không? Vui lòng nhập lý do:
+              </p>
+              <textarea
+                value={cancelReasonInput}
+                onChange={(e) => setCancelReasonInput(e.target.value)}
+                placeholder="Ví dụ: Tôi có việc bận đột xuất..."
+                autoFocus
+              />
+            </div>
+            <div className="modal-footer">
+              <button className="btn-modal-close" onClick={handleCloseCancelModal}>Đóng</button>
+              <button className="btn-modal-confirm" onClick={handleConfirmCancel}>Xác nhận hủy</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
 
-export default AppointmentBooking;
+export default StudentAppointment;

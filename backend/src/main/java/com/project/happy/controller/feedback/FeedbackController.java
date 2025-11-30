@@ -5,7 +5,7 @@ import com.project.happy.entity.Feedback;
 import com.project.happy.service.feedback.FeedbackService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/feedbacks")
 public class FeedbackController {
@@ -23,7 +23,7 @@ public class FeedbackController {
 
    //Lay feedback theo ID buoi hop
     @GetMapping
-    public List<Feedback> getFeedbacks(@RequestParam Long meetingID) {
-        return service.getFeedbackByMeeting(meetingID);
+    public List<Feedback> getFeedbacks(@RequestParam Long meetingId) {
+        return service.getFeedbackByMeeting(meetingId);
     }
 }

@@ -166,4 +166,25 @@ public class TutorSchedulingService implements ITutorSchedulingService {
         // Ví dụ tạo link online đơn giản
         return "https://meet.example.com/" + appointment.getMeetingId();
     }
+
+    @Override
+    public Appointment viewAppointmentDetails(Long appointmentId) {
+        // Lấy meeting từ repository
+        Meeting meeting = meetingRepo.findById(appointmentId);
+
+        // Nếu không tồn tại -> return null
+        if (meeting == null) {
+            return null;
+        }
+
+        // Kiểm tra nếu meeting là Appointment
+        if (meeting instanceof Appointment) {
+            Appointment appointment = (Appointment) meeting;
+
+            // Trả về appointment để tutor xem chi tiết
+            return appointment;
+        }
+        // Không phải Appointment -> không xem được
+        return null;
+    }
 }

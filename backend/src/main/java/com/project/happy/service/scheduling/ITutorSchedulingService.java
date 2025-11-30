@@ -28,4 +28,5 @@ public interface ITutorSchedulingService {
     Meeting viewMeetingDetails(Long meetingId);
 
     String createOnlineLink(Appointment appointment);
+    Appointment viewAppointmentDetails(Long appointmentId);
 }

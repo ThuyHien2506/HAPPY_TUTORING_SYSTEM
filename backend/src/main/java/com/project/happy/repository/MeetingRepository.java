@@ -129,7 +129,7 @@ public class MeetingRepository implements IMeetingRepository {
         return findApprovedMeetingByTutor(tutorId).stream()
                 .filter(m -> m instanceof Appointment)
                 .map(m -> (Appointment) m)
-                .filter(a -> a.getStudentId().equals(tutorId) && !a.isCancelled())
+                .filter(a -> a.getTutorId().equals(tutorId) && !a.isCancelled())
                 .collect(Collectors.toList());
     }
 
