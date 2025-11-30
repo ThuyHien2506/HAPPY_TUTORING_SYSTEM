@@ -3,6 +3,7 @@ package com.project.happy.controller.scheduling;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import com.project.happy.entity.Appointment;
 import com.project.happy.entity.Meeting;
 import com.project.happy.service.scheduling.ITutorSchedulingService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/tutor/scheduling")
 public class TutorSchedulingAPI {
@@ -29,10 +31,22 @@ public class TutorSchedulingAPI {
     }
 
     // =================== Appointments ===================
+
     @GetMapping("/appointments/pending")
     public ResponseEntity<List<Appointment>> pending(@RequestParam Long tutorId) {
         List<Appointment> list = tutorService.viewPendingAppointments(tutorId);
         return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/appointments/{id}")
+    public ResponseEntity<Appointment> getAppointmentDetail(@PathVariable Long id) {
+        Appointment appointment = tutorService.viewAppointmentDetails(id);
+
+        if (appointment != null) {
+            return ResponseEntity.ok(appointment);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/appointments/{id}/approve")

@@ -4,9 +4,9 @@ import "./LayoutSv.css";
 import { Calendar, BookOpen, Settings, Bell, Layout } from "react-feather";
 
 // Import ảnh
+
 import logoImg from '../../assets/logo-bk.png'; 
 import avatarImg from '../../assets/avatar.svg';
-// Bây giờ bạn có thể sử dụng các biến logoImg và avatarImg trong component React của mình.
 
 const LayoutSv = ({ children }) => {
   return (

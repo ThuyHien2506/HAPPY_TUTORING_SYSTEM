@@ -1,16 +1,11 @@
 .feedback-page-wrapper {
-  /* Để nó chiếm gần hết chiều ngang */
   width: 95%;
 
-  /* Hoặc nếu muốn nó to nhưng vẫn chừa lề một chút thì dùng: */
-  /* width: 95%; */
   height: auto;
   margin: 0 auto;
 
-  /* Nếu nội dung dài, hãy cho nó scroll ở đây */
-  /* overflow-y: auto; */
   min-height: 100%;
-  padding: 20px; /* Thêm chút đệm cho đẹp */
+  padding: 30px 40px 30px 40px;
 }
 .top-actionss {
   display: flex;
@@ -44,8 +39,8 @@
 }
 
 .btn {
-  padding: 10px 20px;
-  border-radius: 4px;
+  padding: 12px 20px;
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
   border: none;
@@ -53,8 +48,9 @@
 }
 .btn-outline {
   background-color: white;
-  border: 1px solid #ddd;
-  color: #555;
+  border: 1px solid #003366;
+  color: #003366;
+  font-size: 15px;
 }
 .btn-primary.active-tab {
   background-color: #002b5c;

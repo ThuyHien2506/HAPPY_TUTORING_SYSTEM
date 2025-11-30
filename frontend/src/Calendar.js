@@ -1,11 +1,15 @@
+// src/components/Calendar.js (hoặc đường dẫn bạn lưu)
 import React, { useState, useEffect } from "react";
-import "./calendar.css";
+import "./calendar.css"; // Đảm bảo đúng đường dẫn css
 
-export default function Calendar({ onSelect, activeDate }) {
+export default function Calendar({ onSelect, activeDate, availableDates = [] }) {
     const today = new Date();
+    
+    // Xử lý state ngày tháng hiển thị
     const [currentMonth, setCurrentMonth] = useState(() => activeDate ? new Date(activeDate).getMonth() : today.getMonth());
     const [currentYear, setCurrentYear] = useState(() => activeDate ? new Date(activeDate).getFullYear() : today.getFullYear());
 
+    // Khi activeDate đổi (user chọn ngày), update lại view lịch nếu cần
     useEffect(() => {
         if (activeDate) {
             const d = new Date(activeDate);
@@ -34,6 +38,7 @@ export default function Calendar({ onSelect, activeDate }) {
         setCurrentMonth((m) => (m === 11 ? 0 : m + 1));
         if (currentMonth === 11) setCurrentYear((y) => y + 1);
     };
+
     const handleSelect = (day) => {
         const selectedDate = new Date(currentYear, currentMonth, day);
         const year = selectedDate.getFullYear();
@@ -47,7 +52,7 @@ export default function Calendar({ onSelect, activeDate }) {
     const renderDays = () => {
         const cells = [];
         
-        // 1. Ô trống đầu tháng (Start Offset)
+        // 1. Ô trống đầu tháng
         for (let i = 0; i < startOffset; i++) {
             cells.push(<div key={"blank-start-"+i} className="day blank"></div>);
         }
@@ -57,23 +62,29 @@ export default function Calendar({ onSelect, activeDate }) {
             const checkMonth = String(currentMonth + 1).padStart(2, '0');
             const checkDay = String(day).padStart(2, '0');
             const currentString = `${currentYear}-${checkMonth}-${checkDay}`;
+            
             const isSelected = activeDate === currentString;
             const isToday = today.getDate() === day && today.getMonth() === currentMonth && today.getFullYear() === currentYear;
             
+            // LOGIC MỚI: Kiểm tra xem ngày này có trong danh sách rảnh không
+            const isAvailable = availableDates.includes(currentString);
+
             cells.push(
                 <div key={day} 
-                     className={`day ${isSelected ? "selected" : ""} ${isToday ? "today" : ""}`} 
+                     className={`day 
+                        ${isSelected ? "selected" : ""} 
+                        ${isToday ? "today" : ""} 
+                        ${isAvailable ? "available" : ""} 
+                     `} 
                      onClick={() => handleSelect(day)}>
                     {day}
                 </div>
             );
         }
 
-        // 3. THÊM LOGIC: Ô trống cuối tháng (End Offset)
+        // 3. Ô trống cuối tháng cho đẹp đội hình
         const totalCellsRendered = startOffset + totalDays;
         const daysInLastRow = totalCellsRendered % 7;
-        
-        // Tính số ô cần điền để kết thúc hàng cuối cùng
         const endOffset = daysInLastRow === 0 ? 0 : 7 - daysInLastRow;
 
         for (let i = 0; i < endOffset; i++) {
@@ -86,9 +97,9 @@ export default function Calendar({ onSelect, activeDate }) {
     return (
         <div className="calendar">
             <div className="header">
-                <button onClick={handlePrevMonth}>&lt;</button>
+                <button type="button" onClick={handlePrevMonth}>&lt;</button>
                 <span>{`Tháng ${currentMonth + 1} / ${currentYear}`}</span>
-                <button onClick={handleNextMonth}>&gt;</button>
+                <button type="button" onClick={handleNextMonth}>&gt;</button>
             </div>
             <div className="weekdays">{weekDays.map(d => <div key={d} className="weekday">{d}</div>)}</div>
             <div className="grid">{renderDays()}</div>
