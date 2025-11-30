@@ -1,0 +1,32 @@
+.stu-profile-wrapper {
+  width: 100%;
+}
+
+.stu-profile-title {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #003366;
+}
+
+.stu-profile-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.stu-profile-row {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.stu-label {
+  width: 150px;
+  font-weight: 600;
+  color: #333;
+}
+
+.stu-value {
+  flex: 1;
+  color: #555;
+}

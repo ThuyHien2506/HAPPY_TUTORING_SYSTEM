@@ -1,0 +1,248 @@
+/* ===== RESET NHẸ CHO LANDING ===== */
+.landing-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ===== PHẦN TRÊN (WHITE + HERO) ===== */
+.landing-top {
+  flex: 1;
+  background-color: #ffffff;
+}
+
+/* Logo trên cùng bên trái */
+.landing-header {
+  padding: 18px 60px 0 60px;
+}
+
+.landing-logo {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Hero chính */
+.landing-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 60px 80px 60px;
+  gap: 40px;
+}
+
+/* Bên trái: text */
+.landing-left {
+  max-width: 520px;
+}
+
+.landing-welcome {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #000000;
+  margin: 0 0 8px 0;
+}
+
+.landing-title {
+  font-size: 34px;
+  font-weight: 800;
+  color: #0056c9;
+  margin: 0 0 18px 0;
+  text-transform: uppercase;
+}
+
+.landing-description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333333;
+  max-width: 420px;
+  margin-bottom: 28px;
+}
+
+/* Nút Đăng nhập vàng */
+.landing-button {
+  display: inline-block;
+  padding: 12px 32px;
+  border-radius: 25px;
+  border: none;
+  background-color: #ffc400;
+  color: #000000;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  transition: transform 0.1s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.landing-button:hover {
+  background-color: #ffcf33;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+}
+
+/* Bên phải: hình minh hoạ */
+.landing-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.landing-hero-image {
+  max-width: 460px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ===== FOOTER ===== */
+
+.landing-footer {
+  background-color: #003366;
+  color: #ffffff;
+  padding: 24px 60px 18px 60px;
+  font-size: 13px;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  margin-bottom: 14px;
+}
+
+/* Social + hashtag */
+.footer-social {
+  min-width: 180px;
+}
+
+.footer-social-icons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.social-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.footer-hashtag {
+  font-weight: 600;
+}
+
+/* Links */
+.footer-links {
+  display: flex;
+  gap: 40px;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-link {
+  color: #ffffff;
+  text-decoration: none;
+  opacity: 0.9;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}
+
+/* Contact */
+.footer-contact {
+  max-width: 260px;
+}
+
+.footer-heading {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.footer-text {
+  margin: 0 0 4px 0;
+}
+
+/* Dòng cuối cùng */
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  padding-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 11px;
+  opacity: 0.9;
+}
+
+/* ===== RESPONSIVE NHẸ ===== */
+@media (max-width: 960px) {
+  .landing-main {
+    flex-direction: column;
+    text-align: left;
+    padding: 30px 24px 50px 24px;
+  }
+
+  .landing-header {
+    padding: 16px 24px 0 24px;
+  }
+
+  .landing-footer {
+    padding: 20px 24px 16px 24px;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+/* Header: logo + text */
+.landing-header {
+  display: flex;
+  align-items: center;
+  gap: 14px; /* khoảng cách logo - chữ */
+  padding: 20px 40px;
+}
+
+.landing-logo {
+  height: 50px;
+}
+
+/* Text bên phải logo */
+.landing-logo-text p {
+  margin: 0; /* loại bỏ margin trên/dưới */
+}
+
+
+.logo-line1 {
+  font-size: 12px;
+  color: #0a4da3;
+  font-weight: 500;
+}
+
+.logo-line2 {
+  font-size: 20px;
+  color: #0047ba;
+  font-weight: 700;
+}
