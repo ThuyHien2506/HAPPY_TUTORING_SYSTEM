@@ -5,7 +5,7 @@ import "./MeetingCard.css";
 const MeetingCard = ({ data }) => {
   const navigate = useNavigate();
   return (
-    <div className="meeting-card">
+    <div className="meeting-card-feedback">
       <div className="card-header">
         <div className="meeting-title">Chủ đề: {data.topic}</div>
         <span

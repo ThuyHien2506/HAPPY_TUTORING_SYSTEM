@@ -39,8 +39,8 @@
 }
 
 .btn {
-  padding: 10px 20px;
-  border-radius: 4px;
+  padding: 12px 20px;
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
   border: none;
@@ -48,8 +48,9 @@
 }
 .btn-outline {
   background-color: white;
-  border: 1px solid #ddd;
-  color: #555;
+  border: 1px solid #003366;
+  color: #003366;
+  font-size: 15px;
 }
 .btn-primary.active-tab {
   background-color: #002b5c;

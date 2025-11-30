@@ -1,6 +1,6 @@
-.meeting-card {
-  display: flex;
-  flex-direction: column;
+.meeting-card-feedback {
+  /* display: flex; */
+  /* flex-direction: column; */
   background-color: var(--secondary-color);
   border: 1px solid #d1e3f8;
   border-radius: 8px;
@@ -9,10 +9,10 @@
 }
 .card-header {
   display: flex;
-  flex: 1;
+  /* flex: 1; */
   justify-content: space-between;
   margin-bottom: 8px;
-  gap: 15px;
+  /* gap: 15px; */
 }
 .meeting-title {
   font-weight: bold;

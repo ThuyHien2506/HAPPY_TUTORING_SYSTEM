@@ -1,328 +1,332 @@
 /* ----- GLOBAL ----- */
 body {
-    background: linear-gradient(135deg, #e9f0ff, #f7faff);
-    font-family: 'Inter', 'Segoe UI', sans-serif;
-    color: #1b2a52;
+  background: linear-gradient(135deg, #e9f0ff, #f7faff);
+  font-family: "Inter", "Segoe UI", sans-serif;
+  color: #1b2a52;
 }
 
 /* ----- TOP TABS (FIX: Ép 2 nút Tab ngắn hơn và dài bằng nhau) ----- */
 .top-tabs {
-    display: flex; 
-    gap: 12px;
-    margin-bottom: 20px;
-    max-width: 330px; /* ĐIỀU CHỈNH: Giới hạn tổng độ rộng, làm nút ngắn hơn */
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+  max-width: 330px; /* ĐIỀU CHỈNH: Giới hạn tổng độ rộng, làm nút ngắn hơn */
 }
 
 .tab-btn {
-    padding: 10px 15px; 
-    border-radius: 10px;
-    border: 1px solid #003366;
-    background-color: white;
-    color: #003366;
-    cursor: pointer;
-    transition: 0.25s;
-    font-weight: 550;
-    font-size: 15px;
-    
-    flex-grow: 1; /* QUAN TRỌNG: Chia đều không gian cho các tabs */
-    text-align: center;
-    min-width: 100px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid #003366;
+  background-color: white;
+  color: #003366;
+  cursor: pointer;
+  transition: 0.25s;
+  font-weight: 550;
+  font-size: 15px;
+
+  flex-grow: 1; /* QUAN TRỌNG: Chia đều không gian cho các tabs */
+  text-align: center;
+  min-width: 100px;
 }
 
-.tab-btn:hover { 
-    background-color: #dfe8ff;
+.tab-btn:hover {
+  background-color: #dfe8ff;
 }
 
 /* Nút active: Xanh đậm thống nhất */
 .tab-btn.active {
-    background: #003366;
-    color: white;
-    box-shadow: 0 4px 10px rgba(26, 42, 102, 0.3);
-    border: none;
+  background: #003366;
+  color: white;
+  box-shadow: 0 4px 10px rgba(26, 42, 102, 0.3);
+  border: none;
 }
 
 /* ----- MAIN CARD ----- */
 .main-card {
-    background: #ffffffcc;
-    border-radius: 16px;
-    padding: 25px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-    backdrop-filter: blur(6px);
+  background: #ffffffcc;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(6px);
 }
 
 /* ----- VIEW MODE ----- */
 .view-mode-container {
-    display: flex;
-    gap: 100px;
-    flex-wrap: wrap; 
+  display: flex;
+  gap: 100px;
+  flex-wrap: wrap;
 }
 
 /* CỘT TRÁI: LIST GIỜ */
 .time-list-panel {
-    flex: 0 0 250px;
+  flex: 0 0 250px;
 }
 
 /* HEADER LIST GIỜ */
 .time-list-header {
-    font-weight: 600;
-    font-size: 15px;
-    margin-bottom: 12px;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    border-radius: 8px;
-    background: #003366; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 12px;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  background: #003366;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .time-list-body {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 /* SLOT GIỜ (FIX: Màu nền xanh nhạt cố định) */
 .time-slot-item {
-    background: #f0f7ff !important; /* ĐỔI: Ép màu xanh nhạt (giống màu bạn thích) */
-    border: 1px solid #cce0ff; /* Viền xanh đậm hơn chút */
-    padding: 12px;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: 500;
-    font-size: 14px;
-    color: #333;
-    transition: 0.2s;
-    margin-bottom: 8px; 
+  background: #f0f7ff !important; /* ĐỔI: Ép màu xanh nhạt (giống màu bạn thích) */
+  border: 1px solid #cce0ff; /* Viền xanh đậm hơn chút */
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+  transition: 0.2s;
+  margin-bottom: 8px;
 }
 
 .time-slot-item:hover {
-    background: #e6f0ff !important; /* Giữ hover */
-    border-color: #003366;
-    color: #003366;
+  background: #e6f0ff !important; /* Giữ hover */
+  border-color: #003366;
+  color: #003366;
 }
 
 /* ----- CALENDAR PANEL ----- */
 .calendar-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* NÚT THIẾT LẬP (FIX: Chiều rộng cố định và ngắn hơn) */
 .setup-btn {
-    background: #003366;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 18px;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    margin-bottom: 15px;
-    transition: 0.2s;
-    
-    /* ĐIỀU CHỈNH: Set width cố định ngắn hơn và khớp scale với Tabs */
-    width: 170px; 
-    text-align: center; 
-    align-self: flex-end;
+  background: #003366;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  margin-bottom: 15px;
+  transition: 0.2s;
+
+  /* ĐIỀU CHỈNH: Set width cố định ngắn hơn và khớp scale với Tabs */
+  width: 170px;
+  text-align: center;
+  align-self: flex-end;
 }
 
-.setup-btn:hover { opacity: 0.9; }
+.setup-btn:hover {
+  opacity: 0.9;
+}
 
 /* =========================================
    ----- SETUP MODE ----- 
    ========================================= */
 
 .setup-mode-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 0;
-    padding-top: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 /* NÚT LƯU (Góc phải) */
 .action-bar {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 10;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
 }
 
 .save-btn {
-    padding: 10px 22px;
-    background: #003366; 
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(26, 42, 102, 0.25);
-    transition: 0.25s;
+  padding: 10px 22px;
+  background: #003366;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(26, 42, 102, 0.25);
+  transition: 0.25s;
 }
 
 /* TIÊU ĐỀ */
 .setup-title {
-    margin-top: 0;
-    margin-bottom: 15px;
-    border-bottom: 2px solid #003366;
-    display: inline-block;
-    padding-bottom: 5px;
-    font-weight: 600;
-    font-size: 16px;
-    width: fit-content;
-    color: #003366;
+  margin-top: 0;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #003366;
+  display: inline-block;
+  padding-bottom: 5px;
+  font-weight: 600;
+  font-size: 16px;
+  width: fit-content;
+  color: #003366;
 }
 
 /* DÒNG CHỌN NGÀY */
 .date-picker-row {
-    margin-top: -5px;
-    margin-bottom: 10px;
-    font-weight: 400;
-    color: #444;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  margin-top: -5px;
+  margin-bottom: 10px;
+  font-weight: 400;
+  color: #444;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .form-container {
-    background: #f8f9fa; 
-    border: 1px solid #e9ecef;
-    padding: 15px;
-    border-radius: 12px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  padding: 15px;
+  border-radius: 12px;
 }
 
 /* NÚT THÊM THỜI GIAN */
 .add-time-btn {
-    padding: 10px 20px;
-    background: #ffffff;
-    border: 1px dashed #003366;
-    color: #003366;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto; 
-    display: block;
-    box-sizing: border-box; 
+  padding: 10px 20px;
+  background: #ffffff;
+  border: 1px dashed #003366;
+  color: #003366;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  display: block;
+  box-sizing: border-box;
 }
 
 .add-time-btn:hover {
-    background: #f0f4ff;
-    border-style: solid;
+  background: #f0f4ff;
+  border-style: solid;
 }
 
 /* HÀNG THỜI GIAN */
 .time-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    border: 1px solid #eee;
-    width: 100%;
-    max-width: 900px; 
-    margin: 10px auto 0 auto; 
-    box-sizing: border-box; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+  width: 100%;
+  max-width: 900px;
+  margin: 10px auto 0 auto;
+  box-sizing: border-box;
 }
 
 .input-group {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
 }
 
 .input-group label {
-    white-space: nowrap;
-    font-weight: 600;
-    font-size: 14px;
-    color: #333;
-    min-width: 130px;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  min-width: 130px;
 }
 
-.input-box, select {
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccd6f6;
-    background: #fff;
-    font-size: 14px;
-    width: 100%;
-    cursor: pointer;
-    outline: none;
-    transition: 0.2s;
+.input-box,
+select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccd6f6;
+  background: #fff;
+  font-size: 14px;
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+  transition: 0.2s;
 }
 
 .input-box:focus {
-    border-color: #003366;
-    box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+  border-color: #003366;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
 }
 
 /* INPUT DATE & ICON */
 input[type="date"] {
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid #ccd6f6;
-    font-family: inherit;
-    font-weight: 400;
-    font-size: 14px;
-    color: #333;
-    cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccd6f6;
+  font-family: inherit;
+  font-weight: 400;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-    width: 22px; 
-    height: 22px;
-    cursor: pointer;
-    margin-left: 10px;
-    filter: invert(16%) sepia(28%) saturate(7048%) hue-rotate(203deg) brightness(91%) contrast(103%);
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  margin-left: 10px;
+  filter: invert(16%) sepia(28%) saturate(7048%) hue-rotate(203deg)
+    brightness(91%) contrast(103%);
 }
 
 .delete-btn {
-    background: #fff0f0;
-    border: 1px solid #ffcccc;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #e64545;
-    font-size: 14px;
-    font-weight: bold;
-    transition: 0.2s;
-    flex-shrink: 0;
+  background: #fff0f0;
+  border: 1px solid #ffcccc;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #e64545;
+  font-size: 14px;
+  font-weight: bold;
+  transition: 0.2s;
+  flex-shrink: 0;
 }
 
 /* NÚT HỦY */
 .action-footer {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 15px;
-    padding-right: 5px;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+  padding-right: 5px;
 }
 
 .cancel-btn {
-    background: transparent;
-    border: none;
-    color: #666;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: underline;
-    transition: 0.2s;
-    padding: 5px 10px;
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: 0.2s;
+  padding: 5px 10px;
 }
 
 .cancel-btn:hover {
-    color: #d32f2f;
+  color: #d32f2f;
 }
