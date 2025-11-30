@@ -36,4 +36,11 @@ public class TutorSlot {
     
     public LocalTime getEndTime() { return endTime; }
     public void setEndTime(LocalTime endTime) { this.endTime = endTime; }
+    public boolean isOverlapping(TutorSlot other) {
+        // Cần đảm bảo cùng ngày và cùng tutor
+        if (!this.date.equals(other.date) || !this.tutorId.equals(other.tutorId)) {
+            return false;
+        }
+        return this.startTime.isBefore(other.endTime) && this.endTime.isAfter(other.startTime);
+    }
 }

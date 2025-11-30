@@ -21,6 +21,28 @@ const TutorFreeSlot = () => {
     const AUTH_HEADER = 'Basic ' + btoa('user:93f1df6e-84d4-406d-98e0-a9ffd05e43da');
 
     // --- HANDLERS ---
+    
+    // === 1. THÊM HÀM NÀY VÀO ĐÂY ===
+    const handleOpenSetup = () => {
+        // Lấy ngày hôm nay (0h00p00s)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Lấy ngày đang chọn (0h00p00s)
+        const selected = new Date(selectedDate);
+        selected.setHours(0, 0, 0, 0);
+
+        // So sánh
+        if (selected < today) {
+            alert("Lỗi: Không thể thiết lập lịch cho ngày trong quá khứ!");
+            return; // Dừng lại, không cho mở form
+        }
+
+        // Nếu hợp lệ thì mới chuyển sang chế độ SETUP
+        setViewMode('SETUP');
+    };
+    // ===============================
+
     const handleCalendarSelect = (dateStr) => {
         // Calendar trả về string "YYYY-MM-DD"
         setSelectedDate(dateStr); 
@@ -127,9 +149,12 @@ const TutorFreeSlot = () => {
                         </div>
                         
                         <div className="calendar-panel">
-                            <button className="setup-btn" onClick={() => setViewMode('SETUP')}>
+                            {/* === 2. SỬA CHỖ NÀY === */}
+                            {/* Thay onClick={() => setViewMode('SETUP')} bằng hàm mới */}
+                            <button className="setup-btn" onClick={handleOpenSetup}>
                                 Thiết lập lịch rảnh
                             </button>
+                            {/* ==================== */}
                             
                             <div style={{ marginTop: '15px' }}>
                                 <Calendar 
@@ -141,10 +166,9 @@ const TutorFreeSlot = () => {
                     </div>
                 )}
 
-                {/* SETUP MODE */}
+                {/* SETUP MODE (Giữ nguyên) */}
                 {viewMode === 'SETUP' && (
                     <div className="setup-mode-container">
-                        {/* Nút LƯU (Bay lên góc phải nhờ CSS position absolute) */}
                         <div className="action-bar">
                             <button className="save-btn" onClick={handleSave}>Lưu</button>
                         </div>
@@ -182,13 +206,11 @@ const TutorFreeSlot = () => {
                                         </select>
                                     </div>
                                     
-                                    {/* Nút Xóa (Dấu X tròn) */}
                                     <button className="delete-btn" onClick={() => handleRemoveSlot(i)}>✕</button>
                                 </div>
                             ))}
                         </div>
                         
-                        {/* Nút HỦY (Chữ Hủy - Góc phải) */}
                         <div 
                             className="action-footer" 
                             style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '15px' }}
