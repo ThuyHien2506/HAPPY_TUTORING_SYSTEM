@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RegisterTutor.css';
 import mockTutors from './mockDatabase';
@@ -38,6 +38,10 @@ export default function RegisterTutor() {
   const [selectedTutor, setSelectedTutor] = useState(null);
   const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
   const [page, setPage] = useState(1);
+  const [countdown, setCountdown] = useState(10);
+  const [showCountdown, setShowCountdown] = useState(false);
+  const [showConfirmCancelPopup, setShowConfirmCancelPopup] = useState(false);
+  const [showCancelSuccessPopup, setShowCancelSuccessPopup] = useState(false);
 
   const subjects = [
     'Nguyên lý ngôn ngữ lập trình',
@@ -76,10 +80,58 @@ export default function RegisterTutor() {
     setStep(3);
   };
 
-  const onConfirm = () => {
-    // call backend endpoint if needed. For now mock success and go to final
-    setStep(4);
+  const onCancel = () => {
+    // Show confirmation popup first
+    setShowConfirmCancelPopup(true);
   };
+
+  const onConfirmCancelYes = () => {
+    // User confirmed they want to cancel - show success popup
+    setShowConfirmCancelPopup(false);
+    setShowCancelSuccessPopup(true);
+  };
+
+  const onConfirmCancelNo = () => {
+    // User changed their mind - close popup
+    setShowConfirmCancelPopup(false);
+  };
+
+  const onCancelSuccessConfirm = () => {
+    // Go back to step 1 and reset
+    setStep(1);
+    setSubject('');
+    setTutors([]);
+    setSelectedTutor(null);
+    setShowCountdown(false);
+    setCountdown(10);
+    setShowCancelSuccessPopup(false);
+  };
+
+  const onCancelSuccessBackToHome = () => {
+    // Navigate back to home
+    navigate('/student');
+  };
+
+  // Auto-start countdown when entering step 3
+  useEffect(() => {
+    if (step === 3 && !showCountdown) {
+      setShowCountdown(true);
+      setCountdown(10);
+    }
+  }, [step]);
+
+  // Handle countdown timer
+  useEffect(() => {
+    if (showCountdown && countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown(countdown - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (showCountdown && countdown === 0) {
+      setStep(4);
+      setShowCountdown(false);
+    }
+  }, [showCountdown, countdown]);
 
   // pagination helpers for step 2
   const pageSize = 3;
@@ -203,6 +255,47 @@ export default function RegisterTutor() {
       </div>
 
       <div className="confirmation-heading">
+        ĐANG CHỜ DUYỆT ĐĂNG KÝ
+      </div>
+
+      <div className="confirmation-content">
+        <div className="course-title">
+          {subject.toUpperCase()} ({selectedTutor?.code || tutors[0]?.code})
+        </div>
+
+        <div className="student-info">
+          <div className="info-item"><strong>Sinh viên:</strong> Nguyễn Văn A</div>
+          <div className="info-item"><strong>MSSV:</strong> 123456</div>
+          <div className="info-item"><strong>Tutor:</strong> {selectedTutor?.name || (tutors[0] && tutors[0].name)}</div>
+        </div>
+
+        <div className="note-section">
+          <div className="note-title">LƯU Ý</div>
+          <div className="note-content">
+            Yêu cầu sẽ ở trạng thái "Chờ duyệt" nếu Tutor cần xác nhận.
+            <br />
+            Hủy trước 12 giờ để không mất slot.
+          </div>
+        </div>
+
+        <div className="confirmation-actions">
+          <button className="btn-cancel" onClick={onCancel}>Hủy đăng ký</button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+      {step===4 && (
+  <div className="confirmation-container">
+    <div className="confirmation-border success-border">
+      <div className="confirmation-background success-background">
+        <div className="confirmation-icon">
+          <img className="vector-img" src={Vectorimg} alt="Success Icon" />
+        </div>
+        <div className="confirmation-border-dash" />
+      </div>
+
+      <div className="confirmation-heading success-heading">
         HỆ THỐNG XÁC NHẬN ĐĂNG KÝ THÀNH CÔNG
       </div>
 
@@ -227,19 +320,38 @@ export default function RegisterTutor() {
         </div>
 
         <div className="confirmation-actions">
-          <button className="btn-confirm" onClick={onConfirm}>Xác nhận</button>
+          <button className="btn-confirm success-btn" onClick={() => navigate('/student')}>Quay về trang chủ</button>
         </div>
       </div>
     </div>
   </div>
 )}
-      {step===4 && (
-        <div className="card success">
-          <div className="success-icon">✓</div>
-          <h3>Đăng ký thành công</h3>
-          <p>Yêu cầu của bạn đã được lưu và đang chờ duyệt.</p>
-          <div className="actions">
-            <button className="btn btn-primary" onClick={()=>{ setStep(1); setSubject(''); setTutors([]); setSelectedTutor(null); }}>Đăng ký mới</button>
+
+      {/* Confirm Cancel Popup - First popup asking for confirmation */}
+      {showConfirmCancelPopup && (
+        <div className="popup-overlay">
+          <div className="popup-container">
+            <h2 className="popup-title">Bạn có chắc chắn muốn hủy đăng kí không ?</h2>
+            <div className="popup-actions">
+              <button className="popup-btn popup-btn-secondary" onClick={onConfirmCancelNo}>Hủy</button>
+              <button className="popup-btn popup-btn-primary" onClick={onConfirmCancelYes}>Xác nhận</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cancel Success Popup - Second popup showing success message */}
+      {showCancelSuccessPopup && (
+        <div className="popup-overlay">
+          <div className="popup-container">
+            <div className="popup-icon">
+              <div className="checkmark-icon">✓</div>
+            </div>
+            <h2 className="popup-title">Hủy đăng kí thành công</h2>
+            <div className="popup-actions">
+              <button className="popup-btn popup-btn-secondary" onClick={onCancelSuccessBackToHome}>Quay về trang chủ</button>
+              <button className="popup-btn popup-btn-primary" onClick={onCancelSuccessConfirm}>Đăng ký mới</button>
+            </div>
           </div>
         </div>
       )}
