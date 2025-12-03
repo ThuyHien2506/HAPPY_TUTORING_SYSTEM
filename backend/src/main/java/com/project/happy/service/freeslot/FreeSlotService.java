@@ -37,11 +37,30 @@ public class FreeSlotService implements IFreeSlotService {
     // --- GET DATA (Giữ nguyên logic cũ vì đơn giản) ---
     @Override
     public FreeSlotResponse getDailySchedule(Long tutorId, LocalDate date) {
+        // 1. Lấy dữ liệu từ DB lên
         List<TutorSlot> slots = repo.findAvailableByTutorIdAndDate(tutorId, date);
-        // Logic convert response rút gọn cho ví dụ
+
+        // 2. Chuẩn bị Object trả về
         FreeSlotResponse res = new FreeSlotResponse();
         res.setTutorId(tutorId);
         res.setDate(date);
+        
+        // 3. QUAN TRỌNG: Convert từ Entity (TutorSlot) sang DTO (TimeRange)
+        if (slots != null && !slots.isEmpty()) {
+            List<FreeSlotResponse.TimeRange> timeRanges = slots.stream()
+                // Sắp xếp tăng dần theo giờ bắt đầu
+                .sorted((s1, s2) -> s1.getStartTime().compareTo(s2.getStartTime()))
+                // Convert từng slot thành TimeRange
+                .map(slot -> new FreeSlotResponse.TimeRange(slot.getStartTime(), slot.getEndTime()))
+                .collect(Collectors.toList());
+                
+            res.setTimeRanges(timeRanges);
+            res.setStatus("AVAILABLE");
+        } else {
+            res.setTimeRanges(Collections.emptyList());
+            res.setStatus("EMPTY");
+        }
+
         return res; 
     }
 
