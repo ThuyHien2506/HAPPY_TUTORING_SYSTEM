@@ -14,47 +14,6 @@ import {
   cancelMeeting,
 } from "../service/studentService";
 
-// --- MOCK DATA  ---
-const rawSampleData = [
-  {
-    meetingID: 1,
-    date: "2025-11-30",
-    timestart: "08:00",
-    timeend: "10:00",
-    topic: "Nguyên lý ngôn ngữ lập trình",
-  },
-  {
-    meetingID: 2,
-    date: "2025-12-01",
-    timestart: "14:00",
-    timeend: "16:00",
-    topic: "Lập trình Web - ReactJS cơ bản",
-  },
-  {
-    meetingID: 3,
-    date: "2025-12-12",
-    timestart: "09:30",
-    timeend: "11:30",
-    topic: "Hội thảo AI trong giáo dục Đại học hiện nay",
-  },
-];
-
-// --- MOCK MEETINGS ---
-
-let mockMeetings = rawSampleData.map((item, index) => ({
-  meetingId: item.meetingID,
-  topic: item.topic,
-  startTime: `${item.date}T${item.timestart}:00`,
-  endTime: `${item.date}T${item.timeend}:00`,
-
-  type: index === 1 ? "CONSULTATION" : "APPOINTMENT",
-
-  status: "SCHEDULED",
-  onlineLink: "https://meet.google.com/sample-link",
-  studentId: 1,
-  tutorId: 1,
-}));
-
 // ---------- HELPER: status & filter ----------
 const isCancelled = (m) =>
   typeof m.status === "string" &&
@@ -62,23 +21,6 @@ const isCancelled = (m) =>
 
 const filterActiveMeetings = (list = []) =>
   list.filter((m) => !isCancelled(m));
-
-const getCancelableFromMock = () => {
-  const now = new Date();
-  return mockMeetings.filter(
-    (m) => !isCancelled(m) && new Date(m.startTime) > now
-  );
-};
-
-const markMockCancelled = (meetingId) => {
-  const idx = mockMeetings.findIndex((m) => m.meetingId === meetingId);
-  if (idx !== -1) {
-    mockMeetings[idx] = {
-      ...mockMeetings[idx],
-      status: "CANCELLED",
-    };
-  }
-};
 
 // --- HELPER: Tính trạng thái thời gian ---
 const getTimeStatus = (startStr, endStr) => {
@@ -154,54 +96,27 @@ function StudentAppointment({ studentId = 1, tutorId = 1 }) {
       let data = [];
 
       if (isCancelMode) {
-        try {
-          data = await getCancelableMeetings(studentId || 1);
-        } catch (e) {
-          console.warn(
-            "API getCancelableMeetings lỗi, fallback mock cancelable"
-          );
-          data = [];
-        }
-
-        if (Array.isArray(data) && data.length > 0) {
-          setMeetingList(filterActiveMeetings(data));
-        } else {
-          setMeetingList(getCancelableFromMock());
-        }
+        // chỉ gọi backend, không fallback mock
+        data = await getCancelableMeetings(studentId || 1);
       } else {
-        try {
-          data = await getOfficialMeetings(studentId || 1);
-        } catch (e) {
-          console.warn(
-            "API getOfficialMeetings lỗi, fallback mock all meetings"
-          );
-          data = [];
-        }
-
-        if (Array.isArray(data) && data.length > 0) {
-          setMeetingList(filterActiveMeetings(data));
-        } else {
-          setMeetingList(filterActiveMeetings(mockMeetings));
-        }
+        data = await getOfficialMeetings(studentId || 1);
       }
+
+      const safeData = Array.isArray(data) ? data : [];
+      setMeetingList(filterActiveMeetings(safeData));
     } catch (err) {
       console.error("Lỗi tải meetings:", err);
-      if (isCancelMode) {
-        setMeetingList(getCancelableFromMock());
-      } else {
-        setMeetingList(filterActiveMeetings(mockMeetings));
-      }
+      // Nếu lỗi thì để danh sách rỗng, KHÔNG dùng mock
+      setMeetingList([]);
     } finally {
       setLoadingMeetings(false);
     }
   };
 
-
   useEffect(() => {
     if (activeTab === "list") {
       fetchMeetings();
     }
-
   }, [studentId, activeTab, isCancelMode]);
 
   // --------- HANDLERS: BOOKING ----------
@@ -307,20 +222,8 @@ function StudentAppointment({ studentId = 1, tutorId = 1 }) {
     const meetingId = selectedMeetingId;
     if (!meetingId) return;
 
-    const isMock = mockMeetings.some((m) => m.meetingId === meetingId);
-
-    if (isMock) {
-      markMockCancelled(meetingId);
-      alert("Hủy buổi gặp mặt thành công!");
-      await fetchMeetings();
-      handleCloseCancelModal();
-      return;
-    }
-
     try {
       await cancelMeeting(meetingId, cancelReasonInput);
-
-      markMockCancelled(meetingId);
       alert("Đã hủy thành công!");
       await fetchMeetings();
       handleCloseCancelModal();
@@ -409,7 +312,7 @@ function StudentAppointment({ studentId = 1, tutorId = 1 }) {
           }`}
           onClick={() => setActiveTab("book")}
         >
-          Lịch hẹn
+          Đặt lịch hẹn
         </button>
         <button
           className={`tab-btn ${

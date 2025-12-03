@@ -319,3 +319,170 @@
 }
 .msg-error { color: #d32f2f; background: #ffebee; border: 1px solid #fecaca; }
 .msg-success { color: #166534; background: #f0fdf4; border: 1px solid #bbf7d0; }
+
+
+/* src/TutorHandleRequest.css - Additions for List Synchronization */
+
+/* --- Card Header Layout Custom --- */
+.card-header-row-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+/* --- MEETING LIST STYLES (Copied & Adapted from StudentAppointment) --- */
+.meeting-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+  
+.meeting-card {
+    background-color: #f0f7ff; 
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    transition: 0.2s;
+    border: 1px solid #dae9fa;
+    border-left: 5px solid #003366; 
+}
+  
+.meeting-card:hover {
+    box-shadow: 0 6px 15px rgba(0, 51, 102, 0.15);
+    transform: translateY(-2px);
+}
+  
+.meeting-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    margin-right: 20px;
+}
+  
+.meeting-topic {
+    font-size: 16px;
+    font-weight: 700;
+    color: #003366;
+}
+  
+.meeting-time, .meeting-detail {
+    font-size: 14px;
+    color: #4b5563;
+}
+  
+.meeting-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    min-width: 140px; /* Rộng hơn chút để chứa badge */
+}
+  
+.meeting-badge {
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+    white-space: nowrap;
+}
+  
+.badge-appointment {
+    background-color: #ffffff;
+    color: #059669;
+    border: 1px solid #059669;
+}
+  
+.badge-consultation {
+    background-color: #ffffff;
+    color: #2563eb; 
+    border: 1px solid #2563eb; 
+}
+  
+/* --- BUTTONS & LABELS --- */
+.btn-cancel-meeting {
+    background-color: #b91c1c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 2px 5px rgba(185, 28, 28, 0.2);
+}
+  
+.btn-cancel-meeting:hover {
+    background-color: #991b1b;
+    transform: translateY(-1px);
+}
+
+.time-status-label {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-block;
+    min-width: 100px;
+    text-align: center;
+}
+  
+.time-status-past {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    border: 1px solid #e5e7eb;
+}
+  
+.time-status-ongoing {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    animation: pulse 2s infinite;
+}
+  
+.time-status-upcoming {
+    background-color: #fff7ed;
+    color: #ea580c;
+    border: 1px solid #ffedd5;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+    70% { box-shadow: 0 0 0 6px rgba(37, 99, 235, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+}
+
+.btn-mode-switch {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    border: none;
+}
+
+.btn-cancel-mode {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+.btn-cancel-mode:hover {
+    background-color: #fecaca;
+}
+
+.btn-back-mode {
+    background-color: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+.btn-back-mode:hover {
+    background-color: #e5e7eb;
+}
