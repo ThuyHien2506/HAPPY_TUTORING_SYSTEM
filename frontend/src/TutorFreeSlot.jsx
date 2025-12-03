@@ -22,6 +22,28 @@ const TutorFreeSlot = () => {
     "Basic " + btoa("user:93f1df6e-84d4-406d-98e0-a9ffd05e43da");
 
   // --- HANDLERS ---
+
+  // === 1. THÊM HÀM MỚI: CHẶN NGÀY QUÁ KHỨ ===
+  const handleOpenSetup = () => {
+    // Lấy ngày hôm nay (0h00p00s)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Lấy ngày đang chọn (0h00p00s)
+    const selected = new Date(selectedDate);
+    selected.setHours(0, 0, 0, 0);
+
+    // So sánh
+    if (selected < today) {
+      alert("Lỗi: Không thể thiết lập lịch cho ngày trong quá khứ!");
+      return; // Chặn lại, không cho mở form
+    }
+
+    // Nếu hợp lệ thì mới chuyển sang chế độ SETUP
+    setViewMode("SETUP");
+  };
+  // ==========================================
+
   const handleCalendarSelect = (dateStr) => {
     // Calendar trả về string "YYYY-MM-DD"
     setSelectedDate(dateStr);
@@ -132,9 +154,10 @@ const TutorFreeSlot = () => {
             </div>
 
             <div className="calendar-panel">
+              {/* === 2. SỬA NÚT BẤM TẠI ĐÂY: GỌI HÀM handleOpenSetup === */}
               <button
                 className="setup-btn"
-                onClick={() => setViewMode("SETUP")}
+                onClick={handleOpenSetup} 
               >
                 Thiết lập lịch rảnh
               </button>
