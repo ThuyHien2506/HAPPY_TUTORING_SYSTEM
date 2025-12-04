@@ -1,22 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import './TutorFreeSlot.css';
-import { useNavigate } from 'react-router-dom';
-
-import Calendar from './Calendar';
-
-
+import React, { useState, useEffect } from "react";
+import "./TutorFreeSlot.css";
+import Calendar from "./Calendar";
+import { useNavigate } from "react-router-dom";
 const TutorFreeSlot = () => {
-    // --- STATE ---
-    const [viewMode, setViewMode] = useState('VIEW');
+  // --- STATE ---
+  const [viewMode, setViewMode] = useState("VIEW");
     const navigate = useNavigate();
-    // Khởi tạo ngày hiện tại (Local Time chuẩn)
-    const [selectedDate, setSelectedDate] = useState(() => {
-        const d = new Date();
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    });
+  // Khởi tạo ngày hiện tại (Local Time chuẩn)
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  });
 
   const [dailySlots, setDailySlots] = useState([]);
   const [formSlots, setFormSlots] = useState([]);
@@ -129,16 +126,15 @@ const TutorFreeSlot = () => {
       .catch(() => alert("Không kết nối được Server!"));
   };
 
-    // --- RENDER ---
-    return (
-        <div style={{ width: '100%', padding: '25px' }}>
-        <div className="top-tabs">
-            <button className="tab-btn" onClick={() => navigate('/tutor/profile')}>
+  // --- RENDER ---
+  return (
+    <div style={{ width: "100%", padding: "25px" }}>
+      <div className="top-tabs">
+           <button className="tab-btn" onClick={() => navigate('/tutor/profile')}>
                 Thông tin cá nhân
             </button>
-            <button className="tab-btn active">Lịch rảnh</button>
-        </div>
-
+        <button className="tab-btn active">Lịch rảnh</button>
+      </div>
 
       <div className="main-card">
         {/* VIEW MODE */}

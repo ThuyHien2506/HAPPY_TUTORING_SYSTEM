@@ -182,3 +182,42 @@ footer {
 /* ================= SCROLLBAR ================= */
 .page-content::-webkit-scrollbar { width: 7px; }
 .page-content::-webkit-scrollbar-thumb { background: #003366; border-radius: 6px; }
+/* Định dạng chung cho menu */
+.user-menu {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng nhẹ cho menu */
+}
+
+/* Định dạng nút menu */
+.user-menu-item {
+  background: none;
+  color: #007BFF; /* Màu chữ xanh */
+  font-size: 15px; /* Tăng kích thước chữ một chút */
+  padding: 8px 12px;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  margin: 5px 0;
+  border-radius: 4px;
+  transition: all 0.3s ease; /* Hiệu ứng mượt mà */
+}
+
+/* Định dạng cho nút đăng xuất */
+.user-menu-item-danger {
+  color: #DC3545; /* Màu chữ đỏ */
+}
+
+/* Hiệu ứng hover */
+.user-menu-item:hover {
+  background-color: #f1f1f1; /* Màu nền sáng khi hover */
+  transform: translateX(2px); /* Hiệu ứng dịch chuyển nhẹ khi hover */
+}
+
+.user-menu-item-danger:hover {
+  background-color: #f8d7da;
+  transform: translateX(2px); /* Cũng thêm hiệu ứng dịch chuyển cho nút đăng xuất */
+}

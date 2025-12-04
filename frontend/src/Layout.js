@@ -80,22 +80,23 @@ const Layout = ({ children }) => {
               </div>
             )}
           </div>
-            {/* User + menu */}
-            <div className="user-info clickable" onClick={() => setShowUserMenu(!showUserMenu)}>
-              <img src={avatarImg} alt="User" className="user-avatar" />
-              <span>{displayName}</span>
-            </div>
+          {/* User + menu */}
+          <div className="user-info clickable" onClick={() => setShowUserMenu(!showUserMenu)}>
+            <img src={avatarImg} alt="User" className="user-avatar" />
+            <span>{displayName}</span>
+          </div>
 
-            {showUserMenu && (
-              <div className="user-menu">
-                <button className="user-menu-item" onClick={goHome}>
-                  Trang tổng quan
-                </button>
-                <button className="user-menu-item user-menu-item-danger" onClick={handleLogout}>
-                  Đăng xuất
-                </button>
-              </div>
-            )}
+          {showUserMenu && (
+            <div className="user-menu">
+              <button className="user-menu-item" onClick={goHome}>
+                Trang tổng quan
+              </button>
+              <button className="user-menu-item user-menu-item-danger" onClick={handleLogout}>
+                Đăng xuất
+              </button>
+            </div>
+          )}
+
 
         </div>
       </header>

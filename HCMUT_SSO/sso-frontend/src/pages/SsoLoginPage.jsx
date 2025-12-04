@@ -50,7 +50,7 @@ const SsoLoginPage = () => {
       window.location.href = data.redirectUrl;
     } catch (err) {
       console.error(err);
-      setError("Không kết nối được tới máy chủ SSO");
+      setError("Thông tin đăng nhập không chính xác.");
     }
   };
 

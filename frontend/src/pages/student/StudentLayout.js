@@ -46,7 +46,7 @@ const StudentLayout = () => {
             {menuOpen && (
               <div className="user-menu">
                 <button className="user-menu-item" onClick={goHome}>
-                  Trang chủ
+                  Trang tổng quan
                 </button>
                 <button className="user-menu-item logout" onClick={logout}>
                   Đăng xuất
