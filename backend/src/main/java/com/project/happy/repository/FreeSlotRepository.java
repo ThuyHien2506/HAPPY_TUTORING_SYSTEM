@@ -26,6 +26,7 @@ public class FreeSlotRepository implements IFreeSlotRepository {
                 .collect(Collectors.toList());
     }
 
+    
     @Override
     public List<TutorSlot> findAvailableByTutorIdAndDateBetween(Long tutorId, int month, int year) {
         return availableList.stream()

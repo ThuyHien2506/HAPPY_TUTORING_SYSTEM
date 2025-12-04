@@ -3,10 +3,7 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
-import SsoLoginPage from "./pages/SsoLoginPage";
-import SsoForgotPage from "./pages/SsoForgotPage";
 import RegisterTutor from "./pages/student/RegisterTutor";
-
 
 import Layout from "./Layout";                 // tutor layout
 import TutorHome from "./pages/tutor/TutorHome";
@@ -15,7 +12,6 @@ import TutorCourses from "./pages/tutor/TutorCourses";
 import TutorProfile from "./pages/tutor/TutorProfile";
 import TutorFreeSlot from "./TutorFreeSlot";
 import TutorHandleRequest from "./TutorHandleRequest/TutorHandleRequest";
-
 
 // ==== STUDENT IMPORTS ====
 import StudentLayout from "./pages/student/StudentLayout";
@@ -26,15 +22,17 @@ import StudentProfile from "./pages/student/StudentProfile";
 import StudentAppointment from "./StudentAppointment/StudentAppointment";
 import FeedbackPage from "./pages/feedback/FeedbackPage";
 
+// Callback sau khi login SSO xong (sẽ tạo component này ở bước sau)
+import SsoCallbackPage from "./pages/SsoCallbackPage";
+
 function App() {
   return (
     <Routes>
       {/* Landing */}
       <Route path="/" element={<HomePage />} />
 
-      {/* SSO */}
-      <Route path="/login" element={<SsoLoginPage />} />
-      <Route path="/sso/forgot" element={<SsoForgotPage />} />
+      {/* NƠI SSO REDIRECT VỀ SAU KHI LOGIN */}
+      <Route path="/sso/callback" element={<SsoCallbackPage />} />
 
       {/* ==== STUDENT (dùng StudentLayout + Outlet) ==== */}
       <Route path="/student" element={<StudentLayout />}>
@@ -58,7 +56,7 @@ function App() {
         path="/tutor/meetings"
         element={
           <Layout>
-            <TutorHandleRequest/>
+            <TutorHandleRequest />
           </Layout>
         }
       />
@@ -70,15 +68,14 @@ function App() {
           </Layout>
         }
       />
-       <Route
+      <Route
         path="/tutor/handle"
         element={
           <Layout>
-            <TutorHandleRequest/>
+            <TutorHandleRequest />
           </Layout>
         }
       />
-
       <Route
         path="/tutor/profile"
         element={

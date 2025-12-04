@@ -6,9 +6,24 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // Chỉ nhận username + role, không tự kiểm tra pass ở đây
-  const login = (username, role) => {
-    setUser({ username, role });
+  /**
+   * login(userData):
+   *   userData là object chứa thông tin user:
+   *   {
+   *     bkNetId,
+   *     name,
+   *     role,          // 'tutor' hoặc 'student'
+   *     email,
+   *     faculty,
+   *     major,
+   *     phoneNumber,
+   *     gpa,
+   *     yearOfStudy,
+   *     ...
+   *   }
+   */
+  const login = (userData) => {
+    setUser(userData);
   };
 
   const logout = () => {
@@ -22,5 +37,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// hook dùng trong các component
 export const useAuth = () => useContext(AuthContext);

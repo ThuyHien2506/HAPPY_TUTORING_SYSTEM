@@ -80,6 +80,11 @@ const FeedbackPage = () => {
       return;
     }
 
+    if (comment.trim() === "") {
+      alert("Vui lòng nhập nội dung phản hồi!");
+      return;
+    }
+
     const payload = {
       meetingId: parseInt(id),
       rating: rating,

@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8080/api/student/scheduling";
+const BASE_URL = "http://localhost:8081/api/student/scheduling";
 export const getOfficialMeetings = async (studentId) => {
   try {
     const response = await fetch(
