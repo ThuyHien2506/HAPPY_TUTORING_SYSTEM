@@ -5,7 +5,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import RegisterTutor from "./pages/student/RegisterTutor";
 
-import Layout from "./Layout";                 // tutor layout
+import Layout from "./Layout"; // tutor layout
 import TutorHome from "./pages/tutor/TutorHome";
 import TutorMeetings from "./pages/tutor/TutorMeetings";
 import TutorCourses from "./pages/tutor/TutorCourses";
@@ -21,7 +21,7 @@ import StudentCourses from "./pages/student/StudentCourses";
 import StudentProfile from "./pages/student/StudentProfile";
 import StudentAppointment from "./StudentAppointment/StudentAppointment";
 import FeedbackPage from "./pages/feedback/FeedbackPage";
-
+import CourseStd from "./pages/feedback/CourseStd";
 // Callback sau khi login SSO xong (sẽ tạo component này ở bước sau)
 import SsoCallbackPage from "./pages/SsoCallbackPage";
 
@@ -38,7 +38,8 @@ function App() {
       <Route path="/student" element={<StudentLayout />}>
         <Route index element={<StudentHome />} />
         <Route path="meetings" element={<StudentAppointment />} />
-        <Route path="courses" element={<StudentCourses />} />
+        <Route path="courses" element={<CourseStd />} />
+        <Route path="courses/feedback/:id" element={<FeedbackPage />} />
         <Route path="profile" element={<StudentProfile />} />
         <Route path="register-tutor" element={<RegisterTutor />} />
       </Route>
