@@ -23,7 +23,7 @@ const FeedbackPage = () => {
     const fetchMeetingInfo = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8080/api/student/scheduling/meeting/${id}`
+          `http://localhost:8081/api/student/scheduling/meeting/${id}`
         );
         if (!res.ok) throw new Error("Không tìm thấy buổi hẹn");
 
@@ -45,7 +45,7 @@ const FeedbackPage = () => {
     const fetchHistory = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8080/api/feedbacks?meetingId=${id}`
+          `http://localhost:8081/api/feedbacks?meetingId=${id}`
         );
         if (res.ok) {
           const data = await res.json();
@@ -87,7 +87,7 @@ const FeedbackPage = () => {
     };
 
     try {
-      const res = await fetch("http://localhost:8080/api/feedbacks", {
+      const res = await fetch("http://localhost:8081/api/feedbacks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
