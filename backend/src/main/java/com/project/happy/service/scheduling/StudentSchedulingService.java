@@ -1,19 +1,21 @@
-    package com.project.happy.service.scheduling;
+package com.project.happy.service.scheduling;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional; // Import Transactional
 
 import com.project.happy.dto.freeslot.FreeSlotResponse;
 import com.project.happy.entity.Appointment;
 import com.project.happy.entity.Meeting;
 import com.project.happy.entity.MeetingStatus;
-import com.project.happy.entity.TutorSlot;
+// ❌ Xóa import com.project.happy.entity.TutorSlot; 
 
 import com.project.happy.repository.MeetingRepository;
 import com.project.happy.service.freeslot.IFreeSlotService;
@@ -24,7 +26,6 @@ public class StudentSchedulingService implements IStudentSchedulingService {
     @Autowired
     private MeetingRepository meetingRepo;
 
-    // Thay vì gọi Repo, ta gọi Service để đảm bảo logic Cắt/Gộp
     @Autowired
     private IFreeSlotService freeSlotService;
 
@@ -34,18 +35,28 @@ public class StudentSchedulingService implements IStudentSchedulingService {
     }
 
     @Override
+    @Transactional // 💡 THÊM TRANSACTION: Đảm bảo cả 2 thao tác (Tạo hẹn và Cắt slot) đều thành công
     public boolean bookAppointment(Long studentId, Long tutorId, LocalDateTime date,
             LocalDateTime startTime, LocalDateTime endTime, String topic) {
-        List<TutorSlot> availableSlots = freeSlotService.getRawAvailableSlots(tutorId, startTime.toLocalDate());
-        boolean canBook = availableSlots.stream()
-                .anyMatch(s -> !startTime.toLocalTime().isBefore(s.getStartTime())
-                        && !endTime.toLocalTime().isAfter(s.getEndTime()));
 
-        if (!canBook) {
+        // 1. QUAN TRỌNG: Gọi sang FreeSlotService để CẮT SLOT RẢNH VÀ KIỂM TRA TÍNH KHẢ DỤNG
+        // Logic kiểm tra slot có tồn tại và còn AVAILABLE hay không NÊN nằm trong freeSlotService.reserveSlot.
+        // Nếu slot không tồn tại, reserveSlot sẽ ném ra ngoại lệ (IllegalArgumentException/RuntimeException).
+        
+        try {
+            freeSlotService.reserveSlot(tutorId, startTime.toLocalDate(), startTime.toLocalTime(),
+                    endTime.toLocalTime());
+        } catch (IllegalArgumentException e) {
+            // Nếu slot không còn rảnh (reserveSlot ném lỗi), ta ném lỗi lại cho Controller
             throw new IllegalArgumentException(
-                    "Rất tiếc, khung giờ này đã có người đặt trước. Vui lòng làm mới trang và chọn một khung giờ khác.");
+                    "Rất tiếc, khung giờ " + startTime.toLocalTime() + " - " + endTime.toLocalTime() 
+                    + " không có sẵn hoặc đã được đặt. Vui lòng chọn khung giờ khác.");
+        } catch (Exception e) {
+             System.err.println("Lỗi khi cắt lịch rảnh: " + e.getMessage());
+             throw new RuntimeException("Đặt lịch thất bại do lỗi hệ thống khi xử lý slot rảnh.");
         }
-        // 1. Tạo và Lưu cuộc hẹn (Logic cũ)
+        
+        // 2. Tạo và Lưu cuộc hẹn (Chỉ thực hiện nếu reserveSlot thành công)
         Appointment appointment = new Appointment(
                 System.currentTimeMillis(),
                 tutorId,
@@ -55,22 +66,13 @@ public class StudentSchedulingService implements IStudentSchedulingService {
                 topic);
 
         meetingRepo.save(appointment);
-
-        // 2. QUAN TRỌNG: Gọi sang FreeSlotService để CẮT SLOT RẢNH
-        // (Chuyển khoảng thời gian này từ Available -> Booked)
-        try {
-            freeSlotService.reserveSlot(tutorId, startTime.toLocalDate(), startTime.toLocalTime(),
-                    endTime.toLocalTime());
-        } catch (Exception e) {
-            // Nếu lỗi (ví dụ slot không còn rảnh), in log (Thực tế nên ném lỗi để rollback)
-            System.err.println("Lỗi khi cắt lịch rảnh: " + e.getMessage());
-            // throw e; // Nếu muốn chặt chẽ thì bỏ comment dòng này
-        }
-
+        
         return true;
     }
 
+    // --- Hàm cancelMeeting (Giữ nguyên, logic releaseSlot vẫn đúng) ---
     @Override
+    @Transactional // THÊM TRANSACTION CHO HÀM HỦY
     public boolean cancelMeeting(Long meetingId, String reason) {
 
         Meeting meeting = meetingRepo.findById(meetingId);
@@ -83,7 +85,7 @@ public class StudentSchedulingService implements IStudentSchedulingService {
         if (ok) {
             meetingRepo.update(meeting);
 
-            // 3. QUAN TRỌNG: TRẢ LẠI SLOT RẢNH KHI HỦY
+            // TRẢ LẠI SLOT RẢNH KHI HỦY
             try {
                 freeSlotService.releaseSlot(
                         meeting.getTutorId(),
@@ -92,11 +94,14 @@ public class StudentSchedulingService implements IStudentSchedulingService {
                         meeting.getEndTime().toLocalTime());
             } catch (Exception e) {
                 System.err.println("Lỗi khi trả lịch rảnh: " + e.getMessage());
+                // Không ném lỗi ra đây vì cuộc hẹn đã hủy thành công trong DB.
             }
         }
 
         return ok;
     }
+
+    // --- Các hàm khác giữ nguyên logic ---
 
     @Override
     public List<FreeSlotResponse> viewTutorAvailableSlots(Long tutorId) {
@@ -108,7 +113,6 @@ public class StudentSchedulingService implements IStudentSchedulingService {
         List<FreeSlotResponse> thisMonth = freeSlotService.getMonthlySchedule(tutorId, currentMonth, currentYear);
 
         // Lấy slot tháng sau
-        // Tính toán tháng sau (int)
         int nextMonth = (currentMonth == 12) ? 1 : currentMonth + 1;
         int nextYear = (currentMonth == 12) ? currentYear + 1 : currentYear;
 
@@ -123,7 +127,7 @@ public class StudentSchedulingService implements IStudentSchedulingService {
 
         return all;
     }
-
+    
     @Override
     public List<Appointment> viewAppointmentHistory(Long studentId) {
         List<Appointment> list = meetingRepo.findAllAppointmentsByStudent(studentId);
