@@ -24,7 +24,7 @@
   border: 1px solid #003366;
 }
 .btn-primary {
-  background: var(--primary-blue);
+  background: #003366;
   color: white;
 }
 .card-container {

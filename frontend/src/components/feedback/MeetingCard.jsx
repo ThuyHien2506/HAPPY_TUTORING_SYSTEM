@@ -20,7 +20,9 @@ const MeetingCard = ({ data }) => {
       <div className="card-actions">
         <button
           className="btn btn-primary btn-sm"
-          onClick={() => navigate(`/course/feedback/${data.meetingId}`)}
+          onClick={() =>
+            navigate(`/student/courses/feedback/${data.meetingId}`)
+          }
         >
           Phản hồi chất lượng
         </button>

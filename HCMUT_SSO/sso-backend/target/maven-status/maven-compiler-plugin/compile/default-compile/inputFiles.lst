@@ -1,10 +1,10 @@
-D:\study\SE\Redo_2\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\config\WebClientConfig.java
-D:\study\SE\Redo_2\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\controller\SsoAuthController.java
-D:\study\SE\Redo_2\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\dto\LoginRequest.java
-D:\study\SE\Redo_2\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\dto\LoginResponse.java
-D:\study\SE\Redo_2\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\dto\SsoValidationResponse.java
-D:\study\SE\Redo_2\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\entity\SsoTicket.java
-D:\study\SE\Redo_2\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\entity\SsoUser.java
-D:\study\SE\Redo_2\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\repository\SsoTicketRepository.java
-D:\study\SE\Redo_2\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\repository\SsoUserRepository.java
-D:\study\SE\Redo_2\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\SsoApplication.java
+D:\HK_251\BTL CNPM v7 No DB\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\config\WebClientConfig.java
+D:\HK_251\BTL CNPM v7 No DB\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\controller\SsoAuthController.java
+D:\HK_251\BTL CNPM v7 No DB\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\dto\LoginRequest.java
+D:\HK_251\BTL CNPM v7 No DB\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\dto\LoginResponse.java
+D:\HK_251\BTL CNPM v7 No DB\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\dto\SsoValidationResponse.java
+D:\HK_251\BTL CNPM v7 No DB\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\entity\SsoTicket.java
+D:\HK_251\BTL CNPM v7 No DB\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\entity\SsoUser.java
+D:\HK_251\BTL CNPM v7 No DB\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\repository\SsoTicketRepository.java
+D:\HK_251\BTL CNPM v7 No DB\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\repository\SsoUserRepository.java
+D:\HK_251\BTL CNPM v7 No DB\HAPPY_TUTORING_SYSTEM\HCMUT_SSO\sso-backend\src\main\java\com\hcmut\sso\SsoApplication.java
