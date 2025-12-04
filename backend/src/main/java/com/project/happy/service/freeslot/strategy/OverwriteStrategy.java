@@ -6,9 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.project.happy.dto.freeslot.FreeSlotRequest;
 import com.project.happy.entity.Appointment;
 import com.project.happy.entity.MeetingStatus;
-import com.project.happy.entity.TutorAvailability; // 💡 Dùng Entity mới
+import com.project.happy.entity.TutorAvailability;
 import com.project.happy.repository.IFreeSlotRepository;
-import com.project.happy.repository.IMeetingRepository;
+import com.project.happy.repository.IAppointmentRepository; // 💡 SỬA: Import Repo mới
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,9 +21,10 @@ import java.util.stream.Collectors;
 public class OverwriteStrategy implements SlotOperationStrategy {
 
     @Autowired private IFreeSlotRepository repo;
-    @Autowired private IMeetingRepository meetingRepo;
+    
+    // 💡 SỬA: Inject IAppointmentRepository thay vì IMeetingRepository
+    @Autowired private IAppointmentRepository appointmentRepo; 
 
-    // Khai báo Status
     private static final TutorAvailability.Status AVAILABLE_STATUS = TutorAvailability.Status.AVAILABLE;
     private static final TutorAvailability.Status UNAVAILABLE_STATUS = TutorAvailability.Status.UNAVAILABLE; 
 
@@ -36,58 +37,60 @@ public class OverwriteStrategy implements SlotOperationStrategy {
         // 1. Gộp range input
         List<FreeSlotRequest.TimeRange> mergedInput = mergeInputRanges(rawRanges);
 
-        // 2. Lấy lịch hẹn
+        // 2. Lấy lịch hẹn (Sử dụng hàm helper đã cập nhật)
         List<Appointment> existingAppointments = getActiveAppointments(tutorId, targetDate);
 
-        // 3. Tính toán Rảnh/Bận (Bây giờ dùng Entity mới)
+        // 3. Tính toán Rảnh/Bận
         List<TutorAvailability> newAvailable = new ArrayList<>();
-        List<TutorAvailability> newUnavailable = new ArrayList<>(); // Slot bận do hẹn (giữ lại status UNAVAILABLE)
+        List<TutorAvailability> newUnavailable = new ArrayList<>();
 
         if (mergedInput != null) {
             for (FreeSlotRequest.TimeRange range : mergedInput) {
-                // Sửa hàm helper để dùng TutorAvailability
                 splitRangeByAppointments(tutorId, targetDate, range, existingAppointments, newAvailable, newUnavailable);
             }
         }
 
-        // 4. LƯU (Logic chính chuyển từ List sang DB)
-        // Xóa sạch dữ liệu ngày hôm đó trong DB (Sử dụng hàm JPA mới)
+        // 4. LƯU
         repo.deleteByTutorIdAndAvailableDate(tutorId, targetDate); 
         
-        // Chèn các slot Rảnh mới (Status: AVAILABLE)
         if (!newAvailable.isEmpty()) repo.saveAll(newAvailable);
-        
-        // Chèn lại các slot Bận (Status: UNAVAILABLE) để tránh đặt đè
         if (!newUnavailable.isEmpty()) repo.saveAll(newUnavailable);
     }
 
-    // --- CÁC HÀM PRIVATE HELPER (Cần sửa TutorSlot thành TutorAvailability) ---
-
-    // Hàm mergeInputRanges không cần thay đổi vì nó dùng DTO TimeRange
+    // --- CÁC HÀM PRIVATE HELPER ---
 
     private List<Appointment> getActiveAppointments(Long tutorId, LocalDate date) {
-        // ... (Logic này giữ nguyên, vì nó lấy từ meetingRepo)
+        // 💡 SỬA: Sử dụng appointmentRepo để lấy dữ liệu
         List<Appointment> all = new ArrayList<>();
-        all.addAll(meetingRepo.findPendingAppointmentsByTutor(tutorId));
-        all.addAll(meetingRepo.findApprovedAppointmentsByTutor(tutorId));
+        
+        // Gọi hàm findPending... từ AppointmentRepository
+        all.addAll(appointmentRepo.findPendingAppointmentsByTutor(tutorId));
+        
+        // Gọi hàm findOfficial... từ AppointmentRepository (Thay thế findApproved...)
+        all.addAll(appointmentRepo.findOfficialAppointmentsByTutor(tutorId));
+        
         return all.stream()
             .filter(a -> a.getStartTime().toLocalDate().equals(date))
-            .filter(a -> a.getStatus() != MeetingStatus.CANCELLED)
+            // .filter(a -> a.getStatus() != MeetingStatus.CANCELLED) // findOfficial đã lọc cancelled rồi, nhưng giữ lại cũng không sao
             .sorted(Comparator.comparing(Appointment::getStartTime))
             .collect(Collectors.toList());
     }
 
+    // ... (Các hàm helper khác: splitRangeByAppointments, mergeInputRanges giữ nguyên logic) ...
+    
     private void splitRangeByAppointments(Long tutorId, LocalDate date, FreeSlotRequest.TimeRange range, 
-                                          List<Appointment> appointments, 
-                                          List<TutorAvailability> availableList, // 💡 Sửa: Entity mới
-                                          List<TutorAvailability> bookedList) { // 💡 Sửa: Entity mới
+            List<Appointment> appointments, 
+            List<TutorAvailability> availableList, 
+            List<TutorAvailability> bookedList) {
+        // ... (Logic giữ nguyên như phiên bản trước)
+        // Copy lại logic splitRangeByAppointments từ câu trả lời trước đó của tôi
+        // Đảm bảo dùng TutorAvailability
         List<Appointment> overlaps = appointments.stream()
             .filter(a -> a.getStartTime().toLocalTime().isBefore(range.getEndTime()) && a.getEndTime().toLocalTime().isAfter(range.getStartTime()))
             .sorted(Comparator.comparing(Appointment::getStartTime))
             .collect(Collectors.toList());
 
         if (overlaps.isEmpty()) {
-            // Chèn slot Rảnh mới
             TutorAvailability newSlot = new TutorAvailability();
             newSlot.setTutorId(tutorId);
             newSlot.setAvailableDate(date);
@@ -103,7 +106,6 @@ public class OverwriteStrategy implements SlotOperationStrategy {
                 LocalTime effectiveStart = apptStart.isBefore(range.getStartTime()) ? range.getStartTime() : apptStart;
                 LocalTime effectiveEnd = apptEnd.isAfter(range.getEndTime()) ? range.getEndTime() : apptEnd;
 
-                // 1. Chèn slot Rảnh trước
                 if (currentStart.isBefore(effectiveStart)) {
                     TutorAvailability availableSlot = new TutorAvailability();
                     availableSlot.setTutorId(tutorId);
@@ -113,19 +115,17 @@ public class OverwriteStrategy implements SlotOperationStrategy {
                     availableSlot.setStatus(AVAILABLE_STATUS);
                     availableList.add(availableSlot);
                 }
-                // 2. Chèn slot Bận (UNAVAILABLE)
                 if (effectiveStart.isBefore(effectiveEnd)) {
                     TutorAvailability bookedSlot = new TutorAvailability();
                     bookedSlot.setTutorId(tutorId);
                     bookedSlot.setAvailableDate(date);
                     bookedSlot.setStartTime(effectiveStart);
                     bookedSlot.setEndTime(effectiveEnd);
-                    bookedSlot.setStatus(UNAVAILABLE_STATUS); // Dùng UNAVAILABLE cho slot đã đặt
+                    bookedSlot.setStatus(UNAVAILABLE_STATUS);
                     bookedList.add(bookedSlot);
                 }
                 if (effectiveEnd.isAfter(currentStart)) currentStart = effectiveEnd;
             }
-            // 3. Chèn slot Rảnh cuối cùng
             if (currentStart.isBefore(range.getEndTime())) {
                 TutorAvailability lastSlot = new TutorAvailability();
                 lastSlot.setTutorId(tutorId);
@@ -138,9 +138,7 @@ public class OverwriteStrategy implements SlotOperationStrategy {
         }
     }
 
-    // mergeInputRanges giữ nguyên
     private List<FreeSlotRequest.TimeRange> mergeInputRanges(List<FreeSlotRequest.TimeRange> ranges) {
-        // ... (Logic merge giữ nguyên)
         if (ranges == null || ranges.isEmpty()) return new ArrayList<>();
         ranges.sort(Comparator.comparing(FreeSlotRequest.TimeRange::getStartTime));
         List<FreeSlotRequest.TimeRange> result = new ArrayList<>();

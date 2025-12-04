@@ -2,163 +2,150 @@ package com.project.happy.service.scheduling;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // Import Transactional
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.happy.dto.freeslot.FreeSlotResponse;
 import com.project.happy.entity.Appointment;
 import com.project.happy.entity.Meeting;
 import com.project.happy.entity.MeetingStatus;
-// ❌ Xóa import com.project.happy.entity.TutorSlot; 
-
-import com.project.happy.repository.MeetingRepository;
+import com.project.happy.repository.IAppointmentRepository; // 💡 Sử dụng Repository mới
 import com.project.happy.service.freeslot.IFreeSlotService;
 
 @Service
 public class StudentSchedulingService implements IStudentSchedulingService {
 
     @Autowired
-    private MeetingRepository meetingRepo;
+    private IAppointmentRepository appointmentRepo; // 💡 Inject IAppointmentRepository
 
     @Autowired
     private IFreeSlotService freeSlotService;
 
-    public StudentSchedulingService(MeetingRepository meetingRepo, IFreeSlotService freeSlotService) {
-        this.meetingRepo = meetingRepo;
+    public StudentSchedulingService(IAppointmentRepository appointmentRepo, IFreeSlotService freeSlotService) {
+        this.appointmentRepo = appointmentRepo;
         this.freeSlotService = freeSlotService;
     }
 
     @Override
-    @Transactional // 💡 THÊM TRANSACTION: Đảm bảo cả 2 thao tác (Tạo hẹn và Cắt slot) đều thành công
+    @Transactional
     public boolean bookAppointment(Long studentId, Long tutorId, LocalDateTime date,
             LocalDateTime startTime, LocalDateTime endTime, String topic) {
 
-        // 1. QUAN TRỌNG: Gọi sang FreeSlotService để CẮT SLOT RẢNH VÀ KIỂM TRA TÍNH KHẢ DỤNG
-        // Logic kiểm tra slot có tồn tại và còn AVAILABLE hay không NÊN nằm trong freeSlotService.reserveSlot.
-        // Nếu slot không tồn tại, reserveSlot sẽ ném ra ngoại lệ (IllegalArgumentException/RuntimeException).
-        
+        // 1. Cắt slot & Kiểm tra (Logic giữ nguyên)
         try {
             freeSlotService.reserveSlot(tutorId, startTime.toLocalDate(), startTime.toLocalTime(),
                     endTime.toLocalTime());
-        } catch (IllegalArgumentException e) {
-            // Nếu slot không còn rảnh (reserveSlot ném lỗi), ta ném lỗi lại cho Controller
-            throw new IllegalArgumentException(
-                    "Rất tiếc, khung giờ " + startTime.toLocalTime() + " - " + endTime.toLocalTime() 
-                    + " không có sẵn hoặc đã được đặt. Vui lòng chọn khung giờ khác.");
         } catch (Exception e) {
-             System.err.println("Lỗi khi cắt lịch rảnh: " + e.getMessage());
-             throw new RuntimeException("Đặt lịch thất bại do lỗi hệ thống khi xử lý slot rảnh.");
+            throw new IllegalArgumentException(
+                    "Khung giờ này không khả dụng hoặc đã có người đặt: " + e.getMessage());
         }
-        
-        // 2. Tạo và Lưu cuộc hẹn (Chỉ thực hiện nếu reserveSlot thành công)
+
+        // 2. Tạo cuộc hẹn
+        // Constructor này phải khớp với Appointment.java (không có ID)
         Appointment appointment = new Appointment(
-                System.currentTimeMillis(),
                 tutorId,
                 studentId,
                 startTime,
                 endTime,
                 topic);
 
-        meetingRepo.save(appointment);
+        // Khi save, JPA sẽ tự động sinh ID
+        appointmentRepo.save(appointment); // 💡 Dùng appointmentRepo
         
         return true;
     }
 
-    // --- Hàm cancelMeeting (Giữ nguyên, logic releaseSlot vẫn đúng) ---
     @Override
-    @Transactional // THÊM TRANSACTION CHO HÀM HỦY
+    @Transactional
     public boolean cancelMeeting(Long meetingId, String reason) {
+        // Sửa: Xử lý Optional đúng cách và dùng appointmentRepo
+        Appointment appointment = appointmentRepo.findById(meetingId).orElse(null);
 
-        Meeting meeting = meetingRepo.findById(meetingId);
-        if (meeting == null || meeting.isCancelled()) {
+        if (appointment == null || appointment.isCancelled()) {
             return false;
         }
 
-        boolean ok = meeting.cancel(reason);
+        boolean ok = appointment.cancel(reason);
 
         if (ok) {
-            meetingRepo.update(meeting);
+            appointmentRepo.save(appointment); // Sửa: Dùng save() để update
 
-            // TRẢ LẠI SLOT RẢNH KHI HỦY
+            // Trả lại slot
             try {
                 freeSlotService.releaseSlot(
-                        meeting.getTutorId(),
-                        meeting.getStartTime().toLocalDate(),
-                        meeting.getStartTime().toLocalTime(),
-                        meeting.getEndTime().toLocalTime());
+                        appointment.getTutorId(),
+                        appointment.getStartTime().toLocalDate(),
+                        appointment.getStartTime().toLocalTime(),
+                        appointment.getEndTime().toLocalTime());
             } catch (Exception e) {
                 System.err.println("Lỗi khi trả lịch rảnh: " + e.getMessage());
-                // Không ném lỗi ra đây vì cuộc hẹn đã hủy thành công trong DB.
             }
         }
-
         return ok;
     }
 
-    // --- Các hàm khác giữ nguyên logic ---
+    // --- VIEW / GETTERS ---
 
     @Override
     public List<FreeSlotResponse> viewTutorAvailableSlots(Long tutorId) {
+        // Logic lấy Free Slot không liên quan đến Appointment Repo -> Giữ nguyên
         LocalDate today = LocalDate.now();
         int currentMonth = today.getMonthValue();
         int currentYear = today.getYear();
-
-        // Lấy slot tháng này (Gọi qua Service đểlấy List Available)
         List<FreeSlotResponse> thisMonth = freeSlotService.getMonthlySchedule(tutorId, currentMonth, currentYear);
-
-        // Lấy slot tháng sau
+        
         int nextMonth = (currentMonth == 12) ? 1 : currentMonth + 1;
         int nextYear = (currentMonth == 12) ? currentYear + 1 : currentYear;
-
-        List<FreeSlotResponse> nextMonthSlots = freeSlotService.getMonthlySchedule(
-                tutorId, nextMonth, nextYear);
+        List<FreeSlotResponse> nextMonthSlots = freeSlotService.getMonthlySchedule(tutorId, nextMonth, nextYear);
 
         List<FreeSlotResponse> all = new ArrayList<>();
         all.addAll(thisMonth);
         all.addAll(nextMonthSlots);
-        // Sắp xếp theo ngày
         all.sort(Comparator.comparing(FreeSlotResponse::getDate));
-
         return all;
     }
-    
+
     @Override
     public List<Appointment> viewAppointmentHistory(Long studentId) {
-        List<Appointment> list = meetingRepo.findAllAppointmentsByStudent(studentId);
+        // 💡 SỬA: Gọi đúng hàm trong IAppointmentRepository
+        List<Appointment> list = appointmentRepo.findAllAppointmentsByStudent(studentId);
         list.forEach(m -> m.updateStatus(LocalDateTime.now()));
         return list;
     }
 
     @Override
     public Meeting viewMeetingDetails(Long meetingId) {
-        Meeting meeting = meetingRepo.findById(meetingId);
-        if (meeting != null)
-            meeting.updateStatus(LocalDateTime.now());
-        return meeting;
+        // Trả về Appointment nhưng coi như Meeting
+        Appointment appointment = appointmentRepo.findById(meetingId).orElse(null);
+        if (appointment != null)
+            appointment.updateStatus(LocalDateTime.now());
+        return appointment;
     }
 
     @Override
     public List<Meeting> viewOfficialMeetings(Long studentId) {
-        List<Meeting> list = meetingRepo.findOfficialMeetingsByStudent(studentId);
+        // 💡 SỬA: Gọi đúng hàm trong IAppointmentRepository và cast về Meeting
+        List<Appointment> list = appointmentRepo.findOfficialAppointmentsByStudent(studentId);
         list.forEach(m -> m.updateStatus(LocalDateTime.now()));
-        return list;
+        return new ArrayList<>(list);
     }
 
     @Override
     public List<Meeting> findCancellableMeetings(Long studentId) {
-        List<Meeting> officialMeetings = meetingRepo.findOfficialMeetingsByStudent(studentId);
+        // 💡 SỬA: Gọi đúng hàm trong IAppointmentRepository
+        List<Appointment> officialMeetings = appointmentRepo.findOfficialAppointmentsByStudent(studentId);
         LocalDateTime now = LocalDateTime.now();
 
         return officialMeetings.stream()
                 .peek(m -> m.updateStatus(now))
                 .filter(m -> !m.isCancelled()
                         && (m.getStatus() == MeetingStatus.SCHEDULED || m.getStatus() == MeetingStatus.ONGOING))
+                .map(m -> (Meeting) m) // Cast về Meeting
                 .toList();
     }
 }
