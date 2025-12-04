@@ -307,3 +307,36 @@
   font-size: 14px;
   font-weight: bold;
 }
+/* --- CSS CHO HỘP LỖI MỚI (Giống giao diện SSO gốc) --- */
+
+.sso-error-box {
+  background-color: #fdf5f5;  /* Nền hồng nhạt */
+  border: 1px dotted #cc0000; /* Viền đỏ nét đứt */
+  padding: 10px;
+  margin-bottom: 20px;
+  display: flex;              /* Dùng flex để căn Icon và chữ */
+  align-items: flex-start;    /* Căn trên cùng */
+  gap: 15px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.sso-error-icon {
+  flex-shrink: 0; /* Đảm bảo icon không bị co lại */
+  margin-top: 5px; /* Đẩy icon xuống một chút */
+}
+
+.sso-error-icon svg {
+  width: 40px; /* Kích thước icon cảnh báo */
+  height: 40px;
+}
+
+.sso-error-text {
+  color: #cc0000; /* Chữ màu đỏ đậm */
+  font-weight: 500;
+}
+.sso-error {
+  color: red;
+  margin-bottom: 10px;
+  font-weight: bold;
+}

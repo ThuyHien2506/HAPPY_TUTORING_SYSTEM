@@ -23,11 +23,26 @@ const SsoLoginPage = () => {
     e.preventDefault();
     setError("");
 
+    // Kiểm tra nếu chưa nhập username hoặc password
+    if (!username && !password) {
+      setError("Hãy nhập tài khoản và mật khẩu của bạn");
+      return;
+    }
+    if (!username) {
+      setError("Hãy nhập tài khoản của bạn");
+      return;
+    }
+    if (!password) {
+      setError("Hãy nhập mật khẩu của bạn");
+      return;
+    }
+
     try {
       const data = await ssoLogin(username, password, service);
 
       if (!data.redirectUrl) {
-        setError(data.message || "Đăng nhập thất bại");
+        // Lỗi từ server (sai username/password)
+        setError(data.message || "Sai tài khoản hoặc mật khẩu");
         return;
       }
 
@@ -47,6 +62,7 @@ const SsoLoginPage = () => {
 
   return (
     <div className="sso-page">
+      {/* Thanh tím trên cùng */}
       <header className="sso-topbar">
         <div className="sso-topbar-inner">
           <div className="sso-topbar-logo">
@@ -56,11 +72,14 @@ const SsoLoginPage = () => {
         </div>
       </header>
 
+      {/* Nội dung chính */}
       <main className="sso-main">
         <div className="sso-card">
+          {/* Cột trái: form */}
           <div className="sso-left">
-            <h2>Nhập thông tin tài khoản của bạn</h2>
+            <h2 className="sso-left-title">Nhập thông tin tài khoản của bạn</h2>
 
+            {/* Hiển thị lỗi màu đỏ */}
             {error && <div className="sso-error">{error}</div>}
 
             <form onSubmit={handleSubmit} className="sso-form">
@@ -117,13 +136,42 @@ const SsoLoginPage = () => {
             </form>
           </div>
 
+          {/* Cột phải: Lưu ý + Hỗ trợ kỹ thuật */}
           <div className="sso-right">
-            <h3>Hỗ trợ kỹ thuật</h3>
-            <p>
-              Email: <a href="mailto:support@hcmut.edu.vn">support@hcmut.edu.vn</a> | ĐT: (84-8) 38647256 – 7204
+            <div className="sso-lang">
+              Ngôn ngữ: <a href="#/">Tiếng Việt</a> | <a href="#/">Tiếng Anh</a>
+            </div>
+
+            <h3 className="sso-right-title">Lưu ý</h3>
+            <p className="sso-right-text">
+              Trang đăng nhập này cho phép đăng nhập một lần đến nhiều hệ thống
+              web ở Trường Đại học Bách khoa – ĐHQG HCM. Được hiểu là bạn chỉ
+              cần đăng nhập một lần cho những hệ thống web đã đăng ký với hệ
+              thống xác thực này.
+            </p>
+            <p className="sso-right-text">
+              Bạn cần dùng tài khoản HCMUT để đăng nhập. Tài khoản HCMUT cho
+              phép truy cập đến nhiều tài nguyên bao gồm hệ thống tin, thông
+              tin, thư điện tử, ...
+            </p>
+            <p className="sso-right-text">
+              Vì lý do an ninh, khi dùng xong bạn hãy thoát khỏi trình duyệt web
+              sau khi kết thúc việc truy cập các dịch vụ đòi hỏi xác thực.
+            </p>
+
+            <h3 className="sso-right-title">Hỗ trợ kỹ thuật</h3>
+            <p className="sso-right-text">
+              E-mail: <a href="mailto:support@hcmut.edu.vn">support@hcmut.edu.vn</a>{" "}
+              | ĐT: (84-8) 38647256 – 7204
             </p>
           </div>
         </div>
+
+        {/* Footer nhỏ giống bản gốc */}
+        <footer className="sso-footer">
+          Bản quyền © 2011 – 2012 Trường Đại học Bách khoa – ĐHQG-HCM. Được hỗ
+          trợ bởi <a href="#/">Jasig CAS 3.5.1</a>
+        </footer>
       </main>
     </div>
   );
