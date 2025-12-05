@@ -35,6 +35,7 @@ public class UserController {
                     dto.setMajor(user.getMajor());
                     dto.setPhoneNumber(user.getPhoneNumber());
                     dto.setGpa(user.getGpa());
+                    dto.setMS(user.getMS());
                     dto.setYearOfStudy(user.getYearOfStudy());
                     dto.setQualifications(user.getQualifications());
                     return ResponseEntity.ok(dto);

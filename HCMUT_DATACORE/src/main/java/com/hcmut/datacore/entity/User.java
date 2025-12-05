@@ -29,13 +29,19 @@ public class User {
     private Integer yearOfStudy;
     private String qualifications;
     private String status;
-
+    private String MS;
     // ====== GETTERS & SETTERS ======
 
     public Long getId() {
         return id;
     }
 
+    public String getMS() {
+        return MS;
+    }
+    public void setMS(String MS) {
+        this.MS = MS;
+    }
     public String getBkNetId() {
         return bkNetId;
     }

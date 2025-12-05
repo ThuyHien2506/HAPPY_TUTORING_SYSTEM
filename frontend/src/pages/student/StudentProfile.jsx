@@ -4,18 +4,16 @@ import { useAuth } from "../../AuthContext";
 import { getUserProfile } from "../../api/userApi"; 
 
 const StudentProfile = () => {
-  // Lấy user (chỉ để lấy ID cần thiết cho API)
-  const { user } = useAuth();
-  const userId = user?.id || user?.bkNetId; // Giả sử ID người dùng nằm trong user.id/user.bkNetId
 
-  // 1. Khởi tạo State để lưu dữ liệu Profile và trạng thái
+  const { user } = useAuth();
+  const userId = user?.id || user?.bkNetId; 
+
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 2. Sử dụng useEffect để gọi API khi component được mount
+
   useEffect(() => {
-    // Chỉ gọi API nếu có userId
     if (!userId) {
       setError("Không tìm thấy ID người dùng để tải hồ sơ.");
       setLoading(false);
@@ -26,22 +24,22 @@ const StudentProfile = () => {
       try {
         setLoading(true);
         setError(null);
-        // ⬅️ Gọi hàm API
+        
         const data = await getUserProfile(userId); 
-        setProfileData(data); // Lưu dữ liệu API vào state
+        setProfileData(data); 
       } catch (err) {
         console.error("Lỗi khi tải hồ sơ:", err);
         setError("Không thể tải thông tin hồ sơ. Vui lòng thử lại.");
         setProfileData(null);
       } finally {
-        setLoading(false); // Dù thành công hay thất bại cũng kết thúc loading
+        setLoading(false); 
       }
     };
 
     fetchUserProfile();
-  }, [userId]); // Dependency: Chỉ chạy lại khi userId thay đổi
+  }, [userId]); 
 
-  // 3. Xử lý trạng thái Loading (Đang tải)
+
   if (loading) {
     return <div className="student-page-inner">Đang tải hồ sơ...</div>;
   }
@@ -61,17 +59,17 @@ const StudentProfile = () => {
   
   // Tránh việc phải thay đổi quá nhiều tên biến trong JSX, ta đặt tên lại cho dễ dùng
   // Sửa đổi dòng này trong component StudentProfile
-const { 
-  // Lấy thuộc tính 'fullName' từ profileData và đặt tên biến là 'name'
-  fullName: name,         
-  // Lấy thuộc tính 'studentCode' từ profileData và đặt tên biến là 'studentId'
-  studentCode: studentId, 
-  // Lấy thuộc tính 'major' từ profileData và đặt tên biến là 'department'
-  major: department,      
-  // Hai thuộc tính này đã đúng tên và hiển thị
-  email,
-  phoneNumber 
-} = profileData;
+const {
+    fullName: name,
+    MS, 
+    bkNetId, 
+    major,
+    faculty,      
+    email,
+    phoneNumber,
+    gpa,
+    yearOfStudy
+  } = profileData;
 
   return (
     <div className="student-page-inner">
@@ -94,16 +92,16 @@ const {
             <span className="profile-value">{name}</span> {/* ⬅️ Dùng name từ API */}
           </div>
           <div className="profile-row">
-            <span className="profile-label">Mã số sinh viên</span>
-            <span className="profile-value">{studentId}</span> {/* ⬅️ Dùng studentId từ API */}
+            <span className="profile-label">bkNetId</span>
+            <span className="profile-value">{bkNetId}</span> {/* ⬅️ Dùng studentId từ API */}
           </div>
           <div className="profile-row">
             <span className="profile-label">Khoa/Bộ môn</span>
-            <span className="profile-value">{department}</span> {/* ⬅️ Dùng department từ API */}
+            <span className="profile-value">{faculty}</span> {/* ⬅️ Dùng faculty từ API */}
           </div>
           <div className="profile-row">
             <span className="profile-label">Chuyên ngành</span>
-            <span className="profile-value">{department}</span> {/* ⬅️ Dùng department từ API */}
+            <span className="profile-value">{major}</span> {/* ⬅️ Dùng major từ API */}
           </div>
           <div className="profile-row">
             <span className="profile-label">Email</span>
@@ -111,7 +109,7 @@ const {
           </div>
           <div className="profile-row">
             <span className="profile-label">Số điện thoại</span>
-            <span className="profile-value">{phoneNumber}</span> {/* ⬅️ Dùng phoneNumber từ API */}
+            <span className="profile-value">{phoneNumber}</span>
           </div>
         </div>
       </div>

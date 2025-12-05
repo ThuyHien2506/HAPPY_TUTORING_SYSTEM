@@ -4,6 +4,7 @@ public class UserProfileDto {
 
     private String bkNetId;
     private String email;
+    private String MS;
     private String fullName;
     private String role;
     private String faculty;
@@ -17,6 +18,13 @@ public class UserProfileDto {
         return bkNetId;
     }
 
+    public String getMS() {
+        return MS;
+    }
+    
+    public void setMS(String MS) {
+        this.MS = MS;
+    }
     public void setBkNetId(String bkNetId) {
         this.bkNetId = bkNetId;
     }

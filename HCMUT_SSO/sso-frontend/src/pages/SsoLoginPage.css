@@ -340,3 +340,21 @@
   margin-bottom: 10px;
   font-weight: bold;
 }
+.sso-error {
+  display: flex;
+  align-items: center;
+  background-color: #fff0f0; /* nền đỏ nhạt */
+  border: 1px solid #ff4d4f; /* viền đỏ */
+  color: #ff4d4f; /* chữ đỏ */
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.sso-error img {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
