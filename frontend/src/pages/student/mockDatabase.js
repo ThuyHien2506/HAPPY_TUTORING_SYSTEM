@@ -13,7 +13,7 @@ const tutors = [
   },
   {
     tutorId: 't2',
-    name: 'Trần Thị B',
+    name: 'Trần Văn B',
     subjects: ['Cơ sở dữ liệu','Hệ điều hành'],
     rating: 4.6,
     students: '8/15',

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../AuthContext';
 import './RegisterTutor.css';
 import mockTutors from './mockDatabase';
 import Vectorimg from '../../assets/Vector.png';
@@ -33,6 +34,7 @@ function TutorCard({ tutor, onSelect }) {
 export default function RegisterTutor() {
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
+  const { registerAsTutor } = useAuth();
   const [subject, setSubject] = useState('');
   const [tutors, setTutors] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState(null);
@@ -108,6 +110,13 @@ export default function RegisterTutor() {
   };
 
   const onCancelSuccessBackToHome = () => {
+    // Navigate back to home
+    navigate('/student');
+  };
+
+  const onConfirmSuccess = () => {
+    // Mark user as tutor registered
+    registerAsTutor();
     // Navigate back to home
     navigate('/student');
   };
@@ -320,7 +329,7 @@ export default function RegisterTutor() {
         </div>
 
         <div className="confirmation-actions">
-          <button className="btn-confirm success-btn" onClick={() => navigate('/student')}>Quay về trang chủ</button>
+          <button className="btn-confirm success-btn" onClick={onConfirmSuccess}>Quay về trang chủ</button>
         </div>
       </div>
     </div>

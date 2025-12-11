@@ -24,3 +24,50 @@
   margin: 4px 0;
   color: #234268;
 }
+
+/* Success state */
+.student-register-card.success {
+  text-align: center;
+  background: linear-gradient(135deg, #f0fdf4 0%, #e8f5e9 100%);
+  border: 2px solid #4caf50;
+}
+
+.student-register-card.success h2 {
+  color: #2e7d32;
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+
+.student-register-card.success p {
+  color: #388e3c;
+  font-size: 16px;
+}
+
+.student-register-card.success .redirect-text {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #558b2f;
+  font-style: italic;
+}
+
+/* Button */
+.register-btn {
+  margin-top: 20px;
+  padding: 10px 24px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.register-btn:hover {
+  background-color: #1565c0;
+}
+
+.register-btn:active {
+  background-color: #0d47a1;
+}

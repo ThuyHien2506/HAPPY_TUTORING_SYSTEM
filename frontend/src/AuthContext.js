@@ -26,6 +26,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
+   * registerAsTutor(): Đánh dấu người dùng đã đăng ký tutor
+   */
+  const registerAsTutor = () => {
+    if (user) {
+      const updatedUser = { ...user, isTutorRegistered: true };
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    }
+  };
+
+  /**
    * logout(): Xóa user khỏi State VÀ localStorage
    */
   const logout = () => {
@@ -43,7 +54,7 @@ export const AuthProvider = ({ children }) => {
   */
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, registerAsTutor }}>
       {children}
     </AuthContext.Provider>
   );
