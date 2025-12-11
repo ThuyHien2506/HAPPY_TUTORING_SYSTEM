@@ -354,7 +354,7 @@ function TutorHandleRequest({ tutorId = TUTOR_ID_DEFAULT }) {
       {activeTab === "create" && (
         <div className="booking-card">
           <h3 className="card-section-title">Tạo buổi tư vấn</h3>
-          <div className="booking-body"><p>Chức năng đang phát triển...</p></div>
+          <div className="booking-body"><p>Tutor tạo buổi tư vấn cho sinh viên đăng ký</p></div>
         </div>
       )}
 

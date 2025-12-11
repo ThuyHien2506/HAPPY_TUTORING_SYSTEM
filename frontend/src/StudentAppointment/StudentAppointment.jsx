@@ -182,6 +182,18 @@ function StudentAppointment({ studentId = 1, tutorId = 1 }) {
       setErrorMsg("Vui lòng điền đủ thông tin.");
       return;
     }
+
+    if (preferredStart >= preferredEnd) {
+      setErrorMsg("Thời gian kết thúc phải sau thời gian bắt đầu!");
+      return;
+    }
+
+    const [slotStart, slotEnd] = time.split(" - "); 
+    if (preferredStart < slotStart || preferredEnd > slotEnd) {
+       setErrorMsg(`Vui lòng chọn thời gian nằm trong khoảng ${time}`);
+       return;
+    }
+
     const dateKey = toLocalDateString(date);
     const studentTimeRange = `${preferredStart} - ${preferredEnd}`;
     try {
