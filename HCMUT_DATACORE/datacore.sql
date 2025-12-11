@@ -78,3 +78,59 @@ INSERT INTO users (
 ('m.maithi', 2300007, 'student008@hcmut.edu.vn', 'Mai Thị M', 'STUDENT',
  'Electrical Engineering', 'Electronics', '0913333333',
  3.0, 3, NULL);
+
+-- Subjects/Courses table
+CREATE TABLE subjects (
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    code            VARCHAR(20)  NOT NULL UNIQUE,
+    name            VARCHAR(255) NOT NULL,
+    description     TEXT,
+    created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO subjects (code, name, description) VALUES
+('CS101', 'Nguyen ly ngon ngu lap trinh', 'Programming Fundamentals'),
+('CS102', 'Cau truc du lieu', 'Data Structures'),
+('CS103', 'Lap trinh huong doi tuong', 'Object-Oriented Programming'),
+('CS104', 'Co so du lieu', 'Database Systems'),
+('CS105', 'Mang may tinh', 'Computer Networks'),
+('CS106', 'He dieu hanh', 'Operating Systems'),
+('CS107', 'Tri tue nhan tao', 'Artificial Intelligence'),
+('EE101', 'Dien tu', 'Electronics'),
+('ME101', 'Robot hoc', 'Robotics');
+
+-- Tutor-Subject mapping table
+CREATE TABLE tutor_subjects (
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    tutor_id        BIGINT NOT NULL,
+    subject_id      BIGINT NOT NULL,
+    created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (tutor_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
+    UNIQUE KEY uk_tutor_subject (tutor_id, subject_id)
+);
+
+INSERT INTO tutor_subjects (tutor_id, subject_id) VALUES
+-- Tutor A (a.nguyenvan) - teaches CS101, CS103
+(1, 1), (1, 3),
+-- Tutor B (b.tranthi) - teaches CS107, CS104
+(2, 7), (2, 4),
+-- Tutor C (c.levan) - teaches EE101
+(3, 8),
+-- Tutor D (d.phamthi) - teaches ME101
+(4, 9);
+
+-- Student Enrollment table - stores which tutor a student is enrolled with for which subject
+CREATE TABLE student_enrollments (
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    student_id      BIGINT NOT NULL,
+    tutor_id        BIGINT NOT NULL,
+    subject_id      BIGINT NOT NULL,
+    enrollment_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status          ENUM('ACTIVE', 'COMPLETED', 'DROPPED') DEFAULT 'ACTIVE',
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (tutor_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
+    UNIQUE KEY uk_student_subject (student_id, subject_id)
+);
+

@@ -1,5 +1,6 @@
 package com.hcmut.datacore.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // tìm theo thuộc tính bkNetId trong entity User
     Optional<User> findByBkNetId(String bkNetId);
+
+    // tìm danh sách user theo role (ví dụ: "tutor")
+    List<User> findByRole(String role);
 }

@@ -28,7 +28,7 @@ export const rejectAppointment = async (appointmentId, tutorId, reason) => {
   return res.data;
 };
 
-// Trả slot khi tutor chọn trả lại slot rảnh
+// Tra slot khi tutor chon tra lai slot ranh
 export const returnMeetingSlot = async (tutorId, meetingId) => {
   const res = await apiClient.post(
     `/api/tutor/scheduling/tutor/${tutorId}/meetings/${meetingId}/return-slot`
@@ -36,7 +36,7 @@ export const returnMeetingSlot = async (tutorId, meetingId) => {
   return res.data;
 };
 
-// 🔹 Lấy danh sách meeting chính thức của tutor
+// Lay danh sach meeting chinh thuc cua tutor
 export const getTutorMeetings = async (tutorId) => {
   const res = await apiClient.get(
     "/api/tutor/scheduling/meetings/official",
@@ -45,7 +45,7 @@ export const getTutorMeetings = async (tutorId) => {
   return res.data; // List<Meeting>
 };
 
-// 🔹 Lấy danh sách meeting mà tutor được phép hủy
+// Lay danh sach meeting ma tutor duoc phep huy
 export const getTutorCancelableMeetings = async (tutorId) => {
   const res = await apiClient.get(
     "/api/tutor/scheduling/meetings/cancelable",
@@ -63,4 +63,52 @@ export const cancelTutorMeeting = async (meetingId, reason, tutorId) => {
     }
   );
   return res.data; 
+};
+
+// Lay danh sach tutor tu database
+export const getTutors = async (subject = null) => {
+  const res = await apiClient.get(
+    "/api/tutors",
+    { params: subject ? { subject } : {} }
+  );
+  return res.data; // List<UserProfileDto>
+};
+
+// Get all subjects
+export const getSubjects = async () => {
+  const res = await apiClient.get("/api/subjects");
+  return res.data;
+};
+
+// Get tutors by subject
+export const getTutorsBySubject = async (subjectId) => {
+  const res = await apiClient.get(`/api/tutors/by-subject/${subjectId}`);
+  return res.data;
+};
+
+// Enroll student to a tutor for a subject
+export const enrollStudent = async (studentBkNetId, tutorBkNetId, subjectId) => {
+  const res = await apiClient.post(
+    "/api/enrollments",
+    {
+      studentBkNetId,
+      tutorBkNetId,
+      subjectId
+    }
+  );
+  return res.data;
+};
+
+// Get student enrollments
+export const getStudentEnrollments = async (bkNetId) => {
+  const res = await apiClient.get(`/api/enrollments/student/${bkNetId}`);
+  return res.data;
+};
+
+// Check if student already enrolled for a subject
+export const checkEnrollment = async (bkNetId, subjectId) => {
+  const res = await apiClient.get(
+    `/api/enrollments/student/${bkNetId}/check/${subjectId}`
+  );
+  return res.data;
 };
